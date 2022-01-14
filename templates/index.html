@@ -1,0 +1,252 @@
+<!--Primero se extiende el archivo del layout que se usara en el-->
+{% extends "layout.html" %}
+<!--Ahora se especifica que parte de este archivo ira en el bloque que varia en el layout-->
+{% block content %}
+
+<!--Como en esta plantilla cuando se registre o edite alguien nuevo se enviara un mansaje con flash, primero asignamos 
+ese posible mensaje a messages, with es la forma de declarar una variable cuando se esta aqui-->
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    <!--Ahora comprobaremos si la variable esta vacia o no, si esta vacia es que no ha realizado nada
+    asi que no mostraremos mensaje alguno, pero si contiene infoormacion se mostrara el mensaje correspondiente-->
+    {% if messages %}
+    <!--Se recorrera cada mensaje en el arreglo de mensajes-->
+        {% for category, message in messages %}
+            <script>
+                message = (message, type)=>{
+                    var titlenotify="";
+                    if (type=='warning')
+                    {
+                        titlenotify='Advertencia!';
+                    }
+                    else{
+                        titlenotify='Bienvenido!';
+                    }
+                    console.log(type);
+                    Swal.fire({
+                        icon: type,
+                        title: titlenotify,
+                        text: message,
+                    });
+                }
+                message('{{message}}', '{{category}}');
+            </script>
+        {% endfor %}
+    {% endif %}
+{% endwith %}<!--el endwith marca hasta donde estara viva la variable creada-->
+
+{% if is_logged() %}
+<style>
+    .publications{
+        padding-top: 10px;
+
+    }
+</style>
+
+{% else %}
+<div class="jumbotron p-5">
+    <h1 class="display-4">Hola!</h1>
+    <p class="lead">¡Este es un Sistema Web donde podrás compartir tus imágenes favoritas!</p>
+    <hr class="my-4">
+    <p>Inicia Sesión o Registrate Si Quieres Compartir Algo</p>
+    <a class="btn btn-primary btn-lg" data-toggle="modal" data-target="#RegisterModal"role="button">Registrarse</a>
+</div>
+{% endif %}
+
+<!--
+
+    {% macro render_dialog(title, class='dialog') -%}
+    <div class="{{ class }}">
+        <h2>{{ title }}</h2>
+        <div class="contents">
+            {{ caller() }}
+        </div>
+    </div>
+    {%- endmacro %}
+
+    {% call render_dialog('Hello World') %}
+        This is a simple dialog rendered by using a macro and
+        a call block.
+    {% endcall %}
+
+-->
+
+{% if relevantes %}
+<!--Carrusel para publicaciones recientes-->
+<h3>Publicaciones recientes</h3>
+<div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-ride="carousel">
+    <div class="carousel-inner">
+        <style>
+            .d-block{
+                width: 100%;
+                height: 500px;
+            }
+            @media (max-width: 769px) {
+                .d-block{
+                width: 100%;
+                height: 300px;
+            }
+            }
+        </style>
+        {% for relevante in relevantes %}
+            {% if relevante==relevantes.0 %}
+            <div class="carousel-item active">
+                <a href="/publication/{{relevante.0}}"><img src="/{{relevante.3}}" class="d-block" alt="..."></a>
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>{{relevante.1}}</h5>
+                    <p style="text-overflow: ellipsis; overflow: hidden;white-space: nowrap;">{{relevante.2}}</p>
+                </div>
+            </div>
+            {% else %}
+            <div class="carousel-item">
+                <a href="/publication/{{relevante.0}}"><img src="/{{relevante.3}}" class="d-block" alt="..."></a>
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>{{relevante.1}}</h5>
+                    <p style="text-overflow: ellipsis; overflow: hidden;white-space: nowrap;">{{relevante.2}}</p>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+        
+        
+    </div>
+    <button class="carousel-control-prev" type="button" data-target="#carouselExampleCaptions" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previa</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-target="#carouselExampleCaptions" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Siguiente</span>
+    </button>
+</div>
+{% endif %}
+
+
+
+
+{% if publications %}
+    <h4>Publicaciones</h4>
+    <div class="card-columns containerpublics" id="containerpublics">
+    {% for publication in publications %}
+        <div class="">
+            <div class="card" >
+                <img src="{{publication.3}}"height="200" width="500" class="card-img-top img-fluid" alt="{{publication.1}}">
+                <div class="card-body">
+                    <h5 class="card-title" style="text-overflow: ellipsis; overflow: hidden;white-space: nowrap;">{{publication.1}}</h5>
+                </div>
+                <div class="card-footer">
+
+                    <div class="row">
+                        {% with iddelboton = 'btnlikeindx'+publication.0|string%}
+                        
+                        {% if is_logged() %}
+                            {% if publication.8==1 %}
+                            
+                            <a class="btn col-md-12" id="{{iddelboton}}" style="color: red;"onclick="LikeCangeIndx('{{publication.0}}')">
+                                {% if publication.7==0 %}
+                                <i class="fas fa-heart" id="iconlikeindx{{publication.0}}"></i> <div  id="contadorlikesindx{{publication.0}}"> <b>  Me gusta</b></div>
+                                {% else %}
+                                <i class="fas fa-heart" id="iconlikeindx{{publication.0}}"></i> <div  id="contadorlikesindx{{publication.0}}"> <b>  Me gusta {{publication.7}}</b></div>
+                                {% endif %}
+                                
+                            </a>
+                            {% else %}
+                            <a class="btn col-md-12" id="{{iddelboton}}" onclick="LikeCangeIndx('{{publication.0}}')">
+                                {% if publication.7==0 %}
+                                <i class="far fa-heart" id="iconlikeindx{{publication.0}}"></i> <div  id="contadorlikesindx{{publication.0}}"> <b>  Me gusta</b></div>
+                                {% else %}
+                                <i class="far fa-heart" id="iconlikeindx{{publication.0}}"></i> <div  id="contadorlikesindx{{publication.0}}"> <b>  Me gusta {{publication.7}}</b></div>
+                                {% endif %}
+                                
+                            </a>
+                            {% endif %}
+                        {% else %}
+                        <a class="btn col-md-12" id="{{iddelboton}}" onclick="LikeCangeIndx('{{publication.0}}')">
+                            {% if publication.7==0 %}
+                            <i class="far fa-heart" id="iconlikeindx{{publication.0}}"></i> <div  id="contadorlikesindx{{publication.0}}"> <b>  Me gusta</b></div>
+                            {% else %}
+                            <i class="far fa-heart" id="iconlikeindx{{publication.0}}"></i> <div  id="contadorlikesindx{{publication.0}}"> <b>  Me gusta {{publication.7}}</b></div>
+                            {% endif %}
+                            
+                        </a>
+                        {% endif %}
+                        {%endwith%}
+                    </div>
+                    <div class="row">
+                        <a class="btn col-md-12" href="/publication/{{publication.0}}">
+                            <i class="far fa-eye"></i> <b>Ver Publicacion</b>
+                        </a>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% else %}
+        <p>sin publicaciones</p>
+{% endif %}
+
+<script>
+    
+    function LikeCangeIndx(idpub)
+    {
+        if($('#iconlikeindx'+idpub).is('.far'))
+        {
+            
+            $.getJSON('/like/'+idpub+'.like', function(data){
+                if(data.islike)
+                {
+                    $('#iconlikeindx'+idpub).removeClass('far fa-heart');
+                    $('#iconlikeindx'+idpub).addClass('fas fa-heart');
+                    document.getElementById('btnlikeindx'+idpub).style.color='red';
+                    $("#contadorlikesindx"+idpub).html("<b> Me gusta "+data.likejson[0]+"</b>");
+                }
+                else
+                {
+                    Swal.fire(
+                    'Oops!',
+                    'No puedes reaccionar a publicaciones si no has creado una cuenta',
+                    'error'
+                    )
+                }
+                
+            });
+        }
+        else{
+            
+            $.getJSON('/like/'+idpub+'.dislike', function(data){
+                
+                if(data.islike)
+                {
+                    $('#iconlikeindx'+idpub).removeClass('fas fa-heart');
+                    $('#iconlikeindx'+idpub).addClass('far fa-heart');
+                    document.getElementById('btnlikeindx'+idpub).style.color='black';
+                    $("#contadorlikesindx"+idpub).html("<b> Me gusta "+data.likejson[0]+"</b>");
+                }
+                else
+                {
+                    Swal.fire(
+                    'Oops!',
+                    'No puedes reaccionar a publicaciones si no has creado una cuenta',
+                    'error'
+                    )
+                }
+            });
+        }
+    }
+    /*
+    window.addEventListener('resize', function(e){
+        console.log('gola');
+        if (window.innerWidth>767 && window.innerWidth<1001){
+            console.log(window.innerWidth);
+        }
+    })*/
+</script>
+
+{% endblock %}

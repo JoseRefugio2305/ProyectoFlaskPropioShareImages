@@ -1,0 +1,205 @@
+{% extends 'layout.html'%}
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="//cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css"></script>
+    <script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+
+<style>
+    @keyframes anim{
+    0% {color: rgb(21, 255, 0);}
+    12%{color: aqua;} 
+    25% {color: rgb(129, 47, 197);}
+    37%{color: aquamarine;} 
+    50% {color: rgb(230, 7, 7);} 
+    62%{color: rgb(5, 255, 38);}
+    75% {color: rgb(0, 255, 242);} 
+    87%{color: black;}
+    100% {color: rgb(255, 0, 200);}
+}
+#coronalegdif {
+    animation-name: anim;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+}
+</style>
+
+<div class="row offset-md-2">
+    <a class="btn btn-primary col-md-3" href="/juegofractales" >
+        <i class="fas fa-square-full"></i> Juego Fractales
+    </a>
+    <a class="btn btn-primary offset-md-2 col-md-3" href="/buscaminas">
+        <i class="fas fa-bomb"></i> Buscaminas
+    </a>
+</div>
+
+
+<div id="divtablascore">
+    <table id="tablascore" ">
+        <thead>
+            <tr>
+                <th>Imagen de Perfil</th>
+                <th>Nombre</th>
+                <th>Dificultad</th>
+                <th>Porcentaje</th>
+                <th>Tiempo</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            {% if facil %}
+            {% for f in facil%}
+            <tr>
+                <td class='celdaranking' style='background:blue; color:white'>
+                    <img src='/{{f.3}}' alt='' width='50px' heigth='50px'>
+                </td>
+                <td class='celdaranking' style='background:blue; color:white'>
+                    {{f.1}} {{f.2}}
+                </td>
+                <td class='celdaranking' style='background:blue; color:white'>
+                    {{f.5}}
+                </td>
+                <td class='celdaranking' style='background:blue; color:white'>
+                    {{f.6}}
+                </td>
+                <td class='celdaranking' style='background:blue; color:white'>
+                    {{f.7}}
+                </td>
+                <td class='celdaranking' style='background:blue; color:white'>
+                    {{f.8}}
+                </td>
+            </tr>
+            {% endfor %}
+            {% endif%}
+            {% if normal %}
+            {% for n in normal%}
+            <tr>
+                <td class='celdaranking' style='background:green; color:white'>
+                    <img src='/{{n.3}}' alt='' width='50px' heigth='50px'>
+                </td>
+                <td class='celdaranking' style='background:green; color:white'>
+                    {{n.1}} {{n.2}}
+                </td>
+                <td class='celdaranking' style='background:green; color:white'>
+                    {{n.5}}
+                </td>
+                <td class='celdaranking' style='background:green; color:white'>
+                    {{n.6}}
+                </td>
+                <td class='celdaranking' style='background:green; color:white'>
+                    {{n.7}}
+                </td>
+                <td class='celdaranking' style='background:green; color:white'>
+                    {{n.8}}
+                </td>
+            </tr>
+            {% endfor %}
+            {% endif%}
+            {% if dificil %}
+            {% for d in dificil%}
+            <tr>
+                <td class='celdaranking' style='background:purple; color:white'>
+                    <img src='/{{d.3}}' alt='' width='50px' heigth='50px'>
+                </td>
+                <td class='celdaranking' style='background:purple; color:white'>
+                    {{d.1}} {{d.2}}
+                </td>
+                <td class='celdaranking' style='background:purple; color:white'>
+                    {{d.5}}
+                </td>
+                <td class='celdaranking' style='background:purple; color:white'>
+                    {{d.6}}
+                </td>
+                <td class='celdaranking' style='background:purple; color:white'>
+                    {{d.7}}
+                </td>
+                <td class='celdaranking' style='background:purple; color:white'>
+                    {{d.8}}
+                </td>
+            </tr>
+            {% endfor %}
+            {% endif%}
+            {% if legfacil %}
+            {% for lf in legfacil%}
+            <tr>
+                <td class='celdaranking' style='background:#cd7f32; color:white'>
+                    <img src='/{{lf.3}}' alt='' width='50px' heigth='50px'>
+                </td>
+                <td class='celdaranking' style='background:#cd7f32; color:white'>
+                    <i class='fas fa-crown' style='color:gold'></i> {{lf.1}} {{lf.2}}
+                </td>
+                <td class='celdaranking' style='background:#cd7f32; color:white'>
+                    {{lf.5}}
+                </td>
+                <td class='celdaranking' style='background:#cd7f32; color:white'>
+                    {{lf.6}}
+                </td>
+                <td class='celdaranking' style='background:#cd7f32; color:white'>
+                    {{lf.7}}
+                </td>
+                <td class='celdaranking' style='background:#cd7f32; color:white'>
+                    {{lf.8}}
+                </td>
+            </tr>
+            {% endfor %}
+            {% endif%}
+            {% if legnormal %}
+            {% for ln in legnormal%}
+            <tr>
+                <td class='celdaranking' style='background:#e3e4e5; color:black'>
+                    <img src='/{{ln.3}}' alt='' width='50px' heigth='50px'>
+                </td>
+                <td class='celdaranking' style='background:#e3e4e5; color:black'>
+                    <i class='fas fa-crown' style='color:gold'></i> {{ln.1}} {{ln.2}}
+                </td>
+                <td class='celdaranking' style='background:#e3e4e5; color:black'>
+                    {{ln.5}}
+                </td>
+                <td class='celdaranking' style='background:#e3e4e5; color:black'>
+                    {{ln.6}}
+                </td>
+                <td class='celdaranking' style='background:#e3e4e5; color:black'>
+                    {{ln.7}}
+                </td>
+                <td class='celdaranking' style='background:#e3e4e5; color:black'>
+                    {{ln.8}}
+                </td>
+            </tr>
+            {% endfor %}
+            {% endif%}
+            {% if legdificil %}
+            {% for ld in legdificil%}
+            <tr>
+                <td class='celdaranking' style='background:gold; color:black'>
+                    <img src='/{{ld.3}}' alt='' width='50px' heigth='50px'>
+                </td>
+                <td class='celdaranking' style='background:gold; color:black'>
+                    <i class='fas fa-crown' style='color:gold' id='coronalegdif'></i> {{ld.1}} {{ld.2}}
+                </td>
+                <td class='celdaranking' style='background:gold; color:black'>
+                    {{ld.5}}
+                </td>
+                <td class='celdaranking' style='background:gold; color:black'>
+                    {{ld.6}}
+                </td>
+                <td class='celdaranking' style='background:gold; color:black'>
+                    {{ld.7}}
+                </td>
+                <td class='celdaranking' style='background:gold; color:black'>
+                    {{ld.8}}
+                </td>
+            </tr>
+            {% endfor %}
+            {% endif%}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready( function () {
+    $('#tablascore').DataTable();
+    });
+</script>
+
+{% endblock%}

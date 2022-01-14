@@ -1,0 +1,324 @@
+<!--Primero se extiende el archivo del layout que se usara en el-->
+{% extends "layout.html" %}
+<!--Ahora se especifica que parte de este archivo ira en el bloque que varia en el layout-->
+{% block content %}
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    <!--Ahora comprobaremos si la variable esta vacia o no, si esta vacia es que no ha realizado nada
+    asi que no mostraremos mensaje alguno, pero si contiene infoormacion se mostrara el mensaje correspondiente-->
+    {% if messages %}
+    <!--Se recorrera cada mensaje en el arreglo de mensajes-->
+        {% for category, message in messages %}
+            <script>
+                message = (message, type)=>{
+                    var titlenotify="";
+                    if (type=='warning')
+                    {
+                        titlenotify='Advertencia!';
+                    }
+                    else{
+                        titlenotify='Hecho!';
+                    }
+                    console.log(type);
+                    Swal.fire({
+                        icon: type,
+                        title: titlenotify,
+                        text: message,
+                    });
+                }
+                message('{{message}}', '{{category}}');
+            </script>
+        {% endfor %}
+    {% endif %}
+{% endwith %}<!--el endwith marca hasta donde estara viva la variable creada-->
+
+
+{% if userdata %}
+    <div class="col-md-6 offset-md-3" style="text-align: center;">
+        <h1>Perfil</h1>
+        <img src="/{{userdata.5}}" class="linkimgprofilenav" width="150" height="150" alt="">
+        <h2>{{userdata.1}} {{userdata.2}}</h2>
+        {% if is_logged() and session.id_user==userdata.0%}
+        <p>{{userdata.3}}</p>
+        <p>Seguidores {{userdata.10}}  </p>
+        <p>Siguiendo {{userdata.11}}</p>
+        
+        <a class="btn" id="btneditprofile" href="/editProfile"><i class="fas fa-user-edit"></i> Editar Perfil</a>
+        {% else %}
+        <p>Seguidores {{userdata.10}}</p>
+        <p>Siguiendo {{userdata.11}}</p>
+            <!--Con este if y else se evalua si el usuario que se esta consultando es seguido o no por quien consulta
+            0 es que no esta siguiendo al usuario consultado y 1 es que si lo esta siguiendo-->
+            {% if userdata.12 == 0 %}
+            <a class="btn btn-primary" id="btnfollow" onclick="ChangeFollow('{{userdata.0}}')"><i class="fas fa-user-plus" id="iconfollow"></i> Seguir</a>
+            {% elif userdata.12==1  %}
+            <a class="btn btn-success" id="btnfollow" onclick="ChangeFollow('{{userdata.0}}')"><i class="fas fa-user-minus" id="iconfollow"></i> Dejar de Seguir</a>
+            {% else %}
+            <a class="btn btn-primary" id="btnfollow" onclick="ChangeFollow('{{userdata.0}}')"><i class="fas fa-user-plus" id="iconfollow"></i> Seguir</a>
+            {% endif %}
+        {%endif%}
+        <div class="list-group list-group-horizontal p-3" >          
+            <a class="list-group-item list-group-item-action active" id="btnPublicaciones" onclick="Visible('Publicaciones')">Publicaciones</a>
+            <a class="list-group-item list-group-item-action" id="btnLikes" onclick="Visible('Likes')">Me gusta</a>
+        </div>
+
+    </div>
+    <div class="PublicationsContent p-4" >
+        <div class="col-md-6 offset-md-3" style="text-align: center;" id="typePublication">
+            <div class="list-group list-group-horizontal p-3" >
+                {% if is_logged() and session.id_user==userdata.0%}
+                <a class="list-group-item list-group-item-action active" id="btnPublic" onclick="Visible('Publics')">Publicas</a>
+                <a class="list-group-item list-group-item-action" id="btnPrivate" onclick="Visible('Private')">Privadas</a>
+                {%endif%}
+            </div>
+    
+        </div>
+        <div id="UserPublications">
+            {% if userpubs %}
+                <div class="card-columns">
+                    {% for userpub in userpubs %}
+                    <div class="">
+                        <div class="card" >
+                            <img src="/{{userpub.3}}" width="100" height="200" class="card-img-top img-fluid" alt="{{userpub.1}}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{userpub.1}}</h5>
+                            </div>
+                            <div class="card-footer" style="text-align: center;">
+                                <div class="row">
+                                    <b> {{userpub.7}} Me gusta</b>
+                                </div>
+                                <div class="row">
+                                    <a class="btn" href="/publication/{{userpub.0}}">
+                                        <i class="far fa-eye"></i> <b>Ver Publicacion</b>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>Aun no realizas alguna publicacion</p>
+            {% endif %}
+        </div>
+
+
+        
+        <div id="UserLikes" style="display: none;">
+            {% if userlikes %}
+            <div class="card-columns">
+                {% for userlike in userlikes %}
+                <div class="">
+                    <div class="card" >
+                        <img src="/{{userlike.3}}" width="100" height="200" class="card-img-top img-fluid" alt="{{userlike.1}}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{userlike.1}}</h5>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                            {% with iddelboton = 'btnlikeprofile'+userlike.0|string%}
+                            
+                            {% if is_logged() %}
+                                <a class="btn col-md-12" id="{{iddelboton}}" style="color: red;"onclick="LikeCangeProfile('{{userlike.0}}')">
+                                    
+                                    <i class="fas fa-heart" id="iconlikeprofile{{userlike.0}}"></i><b>Me gusta</b>
+                                </a>
+                            {% endif %}
+                            {%endwith%}
+                            </div>
+                            <div class="row">
+                                <a class="btn" href="/publication/{{userlike.0}}">
+                                    <i class="far fa-eye"></i> <b>Ver Publicacion</b>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+                <p>Aun no realizas alguna publicacion</p>
+            {% endif %}
+        </div>
+
+
+        <div id="UserPrivate" style="display: none;">
+            {% if userprivates %}
+            <div class="card-columns">
+                {% for userprivate in userprivates %}
+                <div class="">
+                    <div class="card" >
+                        <img src="/{{userprivate.3}}" width="100" height="200" class="card-img-top img-fluid" alt="{{userprivate.1}}">
+                        <div class="card-footer">
+                            <div class="row">
+                                <a class="btn" href="/publication/{{userprivate.0}}">
+                                    <i class="far fa-eye"></i> <b>Ver Publicacion</b>
+                                </a>
+                            </div>
+                            <div class="row">
+                                <a class="btn"onclick="ConfirmChangeStatus('{{userprivate.0}}', 3)" >
+                                    <i class="fas fa-lock-open"></i> <b>Hacer publica</b>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+                <p>No tienes publicaciones privadas</p>
+            {% endif %}
+        </div>
+
+
+    </div>
+{% else %}
+<p>el usuario no existe</p>
+{% endif %}
+
+
+<script>
+    function Visible(option){
+        if (option=='Publicaciones'){
+            
+            document.getElementById("UserPublications").style.display="";
+            document.getElementById("typePublication").style.display="";
+            document.getElementById("UserLikes").style.display="None";
+            document.getElementById("UserPrivate").style.display="None";
+            $('#btnPublicaciones').addClass('active');
+            $('#btnPublic').addClass('active');
+            $('#btnLikes').removeClass('active');
+            $('#btnPrivate').removeClass('active');
+        }
+        else if(option=='Likes'){
+            document.getElementById("UserPublications").style.display="None";
+            document.getElementById("typePublication").style.display="None";
+            document.getElementById("UserLikes").style.display="";
+            document.getElementById("UserPrivate").style.display="None";
+            $('#btnPublicaciones').removeClass('active');
+            $('#btnPrivate').removeClass('active');
+            $('#btnLikes').addClass('active');
+        }
+        else if(option=='Private'){
+            document.getElementById("UserPublications").style.display="None";
+            document.getElementById("typePublication").style.display="";
+            document.getElementById("UserLikes").style.display="None";
+            document.getElementById("UserPrivate").style.display="";
+            
+            $('#btnPublic').removeClass('active');
+            $('#btnPrivate').addClass('active');
+            $('#btnLikes').removeClass('active');
+        }
+        else if(option=='Publics')
+        {
+            document.getElementById("UserPublications").style.display="";
+            document.getElementById("typePublication").style.display="";
+            document.getElementById("UserLikes").style.display="None";
+            document.getElementById("UserPrivate").style.display="None";
+            
+            $('#btnPublic').addClass('active');
+            $('#btnPrivate').removeClass('active');
+            $('#btnLikes').removeClass('active');
+        }
+    }
+
+    
+    function LikeCangeProfile(idpub)
+    {
+        if($('#iconlikeprofile'+idpub).is('.far'))
+        {
+            
+            $.getJSON('/like/'+idpub+'.like', function(data){
+                if(data.islike)
+                {
+                    $('#iconlikeprofile'+idpub).removeClass('far fa-heart');
+                    $('#iconlikeprofile'+idpub).addClass('fas fa-heart');
+                    document.getElementById('btnlikeprofile'+idpub).style.color='red';
+                }
+                else
+                {
+                    Swal.fire(
+                    'Oops!',
+                    'No puedes reaccionar a publicaciones si no has creado una cuenta',
+                    'error'
+                    )
+                }
+                
+            });
+        }
+        else{
+            
+            $.getJSON('/like/'+idpub+'.dislike', function(data){
+                
+                if(data.islike)
+                {
+                    $('#iconlikeprofile'+idpub).removeClass('fas fa-heart');
+                    $('#iconlikeprofile'+idpub).addClass('far fa-heart');
+                    document.getElementById('btnlikeprofile'+idpub).style.color='black';
+                }
+                else
+                {
+                    Swal.fire(
+                    'Oops!',
+                    'No puedes reaccionar a publicaciones si no has creado una cuenta',
+                    'error'
+                    )
+                }
+            });
+        }
+    }
+    
+    function ConfirmChangeStatus(idpub, option)
+    {
+        $.getJSON('/changeStatusPub/'+idpub+'.'+option, function(data){
+            window.location.reload();
+        });
+    }
+
+    function ChangeFollow(iduser)
+    {
+        if($('#iconfollow').is('.fa-user-plus'))
+        {
+            $.getJSON('/followUser/'+iduser+'.follow', function(data){
+                if(data.follow)
+                {
+                    $('#btnfollow').removeClass('btn-primary');
+                    $('#btnfollow').addClass('btn-success');
+                    $('#btnfollow').html('<i class="fas fa-user-minus" id="iconfollow"></i> Dejar de Seguir');
+                }
+                else
+                {
+                    Swal.fire(
+                    'Oops!',
+                    'No puedes seguir a otros usuarios si no has creado una cuenta',
+                    'error'
+                    )
+                }
+            });
+
+        }
+        else
+        {
+            $.getJSON('/followUser/'+iduser+'.unfollow', function(data){
+                if(data.follow)
+                {
+                    $('#btnfollow').removeClass('btn-success');
+                    $('#btnfollow').addClass('btn-primary');
+                    $('#btnfollow').html('<i class="fas fa-user-plus" id="iconfollow"></i> Seguir');
+                }
+                else
+                {
+                    Swal.fire(
+                    'Oops!',
+                    'No puedes seguir a otros usuarios si no has creado una cuenta',
+                    'error'
+                    )
+                }
+            });
+        }
+    }
+    
+</script>
+{% endblock %}

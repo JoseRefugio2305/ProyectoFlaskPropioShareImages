@@ -1,0 +1,157 @@
+{% extends "layout.html" %}
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<!--Libreria de socketio-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js" integrity="sha512-MgkNs0gNdrnOM7k+0L+wgiRc5aLgl74sJQKbIWegVIMvVGPc1+gc1L2oK9Wf/D9pq58eqIJAxOonYPVE5UwUFA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<div class="list-group list-group-horizontal p-3" id="opcioneslistasconv">          
+    <a class="list-group-item list-group-item-action active" id="btnConversaciones" onclick="Visible('Conversaciones')" style="text-align: center;">Conversaciones</a>
+    <a class="list-group-item list-group-item-action" id="btnSeguidos" onclick="Visible('Seguidos')"  style="text-align: center;">Usuarios que sigues</a>
+    <a class="list-group-item list-group-item-action" id="btnSeguidores" onclick="Visible('Seguidores')"  style="text-align: center;">Seguidores</a>
+</div>
+
+    <div class="row" >
+        {% if conversaciones %}
+        <div class="col-md-12" id="divconversaciones" style="height: 65vh;overflow: scroll;" >
+            
+            <ul class="list-group list-group-flush col-md-12">
+                {% for conversacion in conversaciones %}
+                <li class="list-group-item">
+                    <div class="card" >
+                        <div class="card-body">
+                            <div class="row">
+                                <a href="/UserProfile/{{conversacion.4}}" class="card-link col-md-3"><img src="/{{conversacion.9}}" class="linkimgprofilenav" width="50" height="50" alt="" ></a>
+                                <h6 class="card-title  col-md-9">{{conversacion.5}} {{conversacion.6}}</h6>
+                                <h6 class="text-muted">{{conversacion.14}}</h6>
+                            </div>
+                            <p class="card-text"></p>
+                            <a class="btn btn-primary"href="/conversation/{{conversacion.0}}"><i class="fas fa-sign-in-alt"></i></a>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            
+        </div>
+        {% else %}
+        <div class="col-md-12" id="divconversaciones"  >
+            <img src="/static/img/404notfound.gif" class="offset-md-3 col-md-6" style="height: 65vh; " alt="">
+        </div>
+        {% endif %}
+
+        {% if seguidos %}
+        <div class="col-md-12" id="divseguidos" style="height: 65vh;overflow: scroll; display: none;" >
+            
+            <!--Ul de lista se usuarios a quien sigo-->
+            <ul class="list-group list-group-flush col-md-12">
+                {% for siguiendo in seguidos %}
+                <li class="list-group-item">
+                    <div class="card" >
+                        <div class="card-body">
+                            <div class="row">
+                                <a href="/UserProfile/{{siguiendo.0}}" class="card-link col-md-3"><img src="/{{siguiendo.5}}" class="linkimgprofilenav" width="50" height="50" alt="" ></a>
+                                <h6 class="card-title  col-md-9">{{siguiendo.1}} {{siguiendo.2}}</h6>
+                                <h6 class="text-muted"></h6>
+                            </div>
+                            <p class="card-text"></p>
+                            <a class="btn btn-primary"href="/createConversation/{{siguiendo.0}}"><i class="fas fa-sign-in-alt"></i></a>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% else %}
+        <div class="col-md-12" id="divseguidos" style="display: none;" >
+            <img src="/static/img/404notfound.gif" class="offset-md-3 col-md-6" style="height: 65vh; "alt="">
+        </div>
+        
+        {% endif %}
+
+
+        {% if seguidores %}
+        <div class="col-md-12" id="divseguidores" style="height: 65vh;overflow: scroll; display: none;" >
+            
+            <!--Ul de lista de seguidores-->
+            <ul class="list-group list-group-flush col-md-12">
+                {% for seguidor in seguidores %}
+                <li class="list-group-item">
+                    <div class="card" >
+                        <div class="card-body">
+                            <div class="row">
+                                <a href="/UserProfile/{{seguidor.0}}" class="card-link col-md-3"><img src="/{{seguidor.5}}" class="linkimgprofilenav" width="50" height="50" alt="" ></a>
+                                <h6 class="card-title  col-md-9">{{seguidor.1}} {{seguidor.2}}</h6>
+                                <h6 class="text-muted"></h6>
+                            </div>
+                            <p class="card-text"></p>
+                            <a class="btn btn-primary"href="/createConversation/{{seguidor.0}}"><i class="fas fa-sign-in-alt"></i></a>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            
+        </div>
+        {% else %}
+        <div class="col-md-12" id="divseguidores" style="display: none;" >
+            <img src="/static/img/404notfound.gif" class="offset-md-3 col-md-6"style="height: 65vh; " alt="" >
+        </div>
+        
+        {% endif %}
+        
+    </div>
+
+    
+
+
+
+<script>
+    $(document).ready(function(){
+        if (window.innerWidth<=430){
+            $('#opcioneslistasconv').removeClass('list-group-horizontal');
+        }
+    });
+    window.addEventListener('resize', function(){
+        if (window.innerWidth<=430){
+            $('#opcioneslistasconv').removeClass('list-group-horizontal');
+        }
+        else{
+            //if(!document.getElementById('opcioneslistasconv').contains('list-group-horizontal')){
+                $('#opcioneslistasconv').addClass('list-group-horizontal');
+            //}
+        }
+    });
+
+    function Visible(option)
+    {
+        if(option=='Conversaciones')
+        {
+            document.getElementById('divconversaciones').style.display="";
+            document.getElementById('divseguidos').style.display="None";
+            document.getElementById('divseguidores').style.display="None";
+            $('#btnConversaciones').addClass('active');
+            $('#btnSeguidos').removeClass('active');
+            $('#btnSeguidores').removeClass('active');
+        }
+        else if(option=='Seguidos')
+        {
+            document.getElementById('divconversaciones').style.display="None";
+            document.getElementById('divseguidos').style.display="";
+            document.getElementById('divseguidores').style.display="None";
+            $('#btnConversaciones').removeClass('active');
+            $('#btnSeguidos').addClass('active');
+            $('#btnSeguidores').removeClass('active');
+        }
+        else
+        {
+            document.getElementById('divconversaciones').style.display="None";
+            document.getElementById('divseguidos').style.display="None";
+            document.getElementById('divseguidores').style.display="";
+            $('#btnConversaciones').removeClass('active');
+            $('#btnSeguidos').removeClass('active');
+            $('#btnSeguidores').addClass('active');
+        }
+    }
+</script>
+
+{% endblock %}

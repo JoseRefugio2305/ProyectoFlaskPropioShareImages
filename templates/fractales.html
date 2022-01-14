@@ -1,0 +1,17 @@
+{% extends 'layout.html'%}
+{% block content %}
+<div class="row">
+    <canvas id="canvas" width="800px" height="500px">
+
+    </canvas>
+</div>
+<script src="/static/js/fractales.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function(){
+        var lienzo=document.getElementById('canvas');
+        lienzo.style.width=window.innerWidth+"px";
+        lienzo.style.height=window.innerHeight+"px";
+    });
+</script>
+{% endblock %}

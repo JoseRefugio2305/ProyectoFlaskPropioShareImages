@@ -1,0 +1,149 @@
+{% extends "layout.html"%}
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<!--Libreria de socketio-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js" integrity="sha512-MgkNs0gNdrnOM7k+0L+wgiRc5aLgl74sJQKbIWegVIMvVGPc1+gc1L2oK9Wf/D9pq58eqIJAxOonYPVE5UwUFA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+{% if is_logged() %}
+    {% if messages %}
+    <div class="col-md-10 offset-md-1 card-header bg-light" >
+        <div class="row no-gutters">
+            <div class="col-md-2">
+                <img src="/{{userdest.5}}" alt="" height="50px" width="50px">
+            </div>
+            <div class="col-md-9">
+                <h4>{{userdest.1}} {{userdest.2}}</h4><p id="txtiswriting"></p>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        #divmensajes{
+            height: 60vh; overflow: scroll; background: white;
+        }
+        #areasendmessage{
+            top: 80%;
+        }
+        @media (max-width:770px){
+            #divmensajes{
+                height: 50vh;
+            }
+        }
+    </style>
+
+    <div class="col-md-10 offset-md-1" id="divmensajes">
+        <p class="text-muted" style="text-align: center;" >Conversacion inicada el {{messages.0.3}}</p>
+
+        {% with fecha=messages.0.3%}
+        {% for msg in messages %}
+        {% if msg.8%}
+            {% if fecha!=msg.8%}
+            <p class="text-muted" style="text-align: center;" >{{msg.8}}</p>
+            {%endif%}
+        {%endif%}
+
+            {% if msg.5 %}
+                {%if session.id_user==msg.7%}
+                <div class="row col-md-12">
+                    <div class="card text-white bg-primary col-md-6 offset-md-6" style="max-width: 30rem;">
+                        <div class="card-body">
+                            <p class="card-text">{{msg.5}}</p>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="row col-md-12">
+                    <div class="card bg-secondary col-md-6" style="max-width: 30rem; color: white;">
+                        <div class="card-body">
+                            <p class="card-text">{{msg.5}}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endif %}
+
+        {% endfor %}
+        {% endwith%}
+    </div>
+    <div class="  offset-md-1 col-md-10 card-header bg-light">
+        <div class="input-group row col-md-12">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="countcaractersmsg">150</span>
+            </div>
+            <input class="form-control" type="text" id="txtmsg" placeholder="Envia un mensaje" maxlength="150" aria-label="Example text with button addon" aria-describedby="btnmsg">
+            <div class="input-group-prepend">
+                <a class="btn btn-outline-primary" id="btnmsg" onclick="SendMessage('{{messages.0.0}}','{{session.id_user}}')"><i class="fas fa-paper-plane"></i></a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <p>Esta conversacion no existe</p>
+    {% endif %}
+{% else %}
+<p>Tienes que estar logeado</p>
+{% endif %}
+
+<script>
+    $(document).ready(function(){
+        var divmensajes=document.getElementById('divmensajes');
+        divmensajes.scrollTop=divmensajes.scrollHeight;
+    });
+    const socket=io();
+
+    //revisamos si se recibio algun mensaje en el lado del cliente, si fue asi, lo agregamos al ul
+    socket.on('message', function(msg){
+        $('#txtiswriting').html('');
+        if(msg.split(".")[1]=='{{session.id_user}}')
+        {
+            $('#divmensajes').append('<div class="row col-md-12">'+
+                                    '<div class="card text-white bg-primary col-md-6 offset-md-6" style="max-width: 18rem;">'+
+                                        '<div class="card-body">'+
+                                            '<p class="card-text">'+msg.split(".")[0]+'</p>'+
+                                        '</div>'+
+                                    '</div>'+
+                                '</div>');
+        }
+        else
+        {
+            $('#divmensajes').append('<div class="row col-md-12">'+
+                                        '<div class="card bg-secondary col-md-6" style="max-width: 30rem; color: white;">'+
+                                            '<div class="card-body">'+
+                                                '<p class="card-text">'+msg.split(".")[0]+'</p>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</div>');
+        }
+        var divmensajes=document.getElementById('divmensajes');
+        divmensajes.scrollTop=divmensajes.scrollHeight;
+    });
+    //este metodo servira para enviar un mensaje en caso de que uno de ellos este escribiendo
+    $('#txtmsg').on('keydown', function(){
+        socket.emit('userwriting',{ room:'{{session.id_conversacion}}', remitente:'{{session.user_id}}'} );
+        var texto=document.getElementById('txtmsg').value;
+        document.getElementById('countcaractersmsg').innerHTML=(150-texto.length);
+    });
+    //Escuchamos e caso de que uno de los usuarios este escribiendo
+    socket.on('userwriting', function(msg){
+        if('{{session.id_user}}'!=msg[1]){
+            $('#txtiswriting').html(msg[0]);
+        }
+    });
+
+    $(document).ready(function(){
+        socket.emit('leave', { room:'{{session.id_conversacion}}'});
+        socket.emit('join', { room:'{{idcon}}'});
+    });
+    function SendMessage(sala, iduseremitente){
+        socket.send($('#txtmsg').val(), sala, iduseremitente);
+        $('#txtmsg').val('');
+        document.getElementById('countcaractersmsg').innerHTML=(150);
+    }
+    
+    $("#tittle").on('keyup', function(e){
+        var texto=document.getElementById('tittle').value;
+        document.getElementById('countcaracterstittle').innerHTML="Agrega un titulo ("+(150-texto.length)+")";
+    });
+</script>
+
+{% endblock %}
