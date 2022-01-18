@@ -96,16 +96,22 @@ def loginUser():
         password = request.form['password']
 
         cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM usuario WHERE email=%s AND password=%s AND is_active='1'", (email, password))
+        cur.execute("CALL `Loggin`(%s, %s)", (email, password))
         data = cur.fetchall()
         if(data):
             data=data[0]
             mensaje="Bienvenido de nuevo "+data[1]
             session['id_user']=data[0]
-            session['email'] = email
             session['password'] = password
             session['name'] = data[1]
             session['imgprofile'] = data[5]
+            session['user_rol']=data[7]
+            if ('/admin:' in email):
+                session['email'] = email[7:]
+                return redirect(url_for('AdministratorPanel',iduseradmin=session["id_user"]))
+            else:
+                session['email'] = email
+                
             messagetype='success'
         else:
             mensaje="Correo o Contrasena incorrectos intenta de nuevo"
@@ -166,7 +172,8 @@ def LogOut():
     session['password'] = None
     session['name'] = None    
     session['imgprofile'] = None
-    session['id_conversacion']=None    
+    session['id_conversacion']=None
+    session['user_rol']=None  
     session.clear()
     return redirect(url_for('home'))
 
@@ -523,7 +530,34 @@ def test_disconnect():
     leave_room(session['id_conversacion'])
     print('Client disconnected')
 
+#Administrador
+@app.route('/AdministratorPanel/<iduseradmin>')
+def AdministratorPanel(iduseradmin):
+    if(is_logged()):
+        if(session['user_rol']==2):
+            cur=mysql.connection.cursor()
+            cur.execute("CALL `EstadisticasIndexAdmin`()")
+            data=cur.fetchall()
+            return render_template('PanelAdministrador/index.html', conteo=data)
+        else:
+            return redirect(url_for('home'))
+    else:
+            return redirect(url_for('home'))
 
+@app.route('/getDataIndexAP/')
+def getDataIndexAP():
+    cur=mysql.connection.cursor()
+    cur.execute("CALL `EtadGraficaIndexAP`()")
+    data=cur.fetchall()
+    
+    return jsonify(datagraf=data)
+
+@app.route('/reviewPosts/')
+def reviewPosts():
+    cur=mysql.connection.cursor()
+    cur.execute("CALL `ConsultarPublicacionesAP`()")
+    data=cur.fetchall()
+    return render_template('PanelAdministrador/datatable.html',publications=data)
 #rutas de juego
 @app.route('/juegos')
 def ShowGames():
@@ -607,5 +641,5 @@ app.jinja_env.globals.update(is_logged=is_logged)
 ##Evalua que el archivo que se esta ejecutando sea el main y no un modulo
 if __name__=='__main__':
     #app.run(debug=True)##si es asi, se ejecuta la aplicacion
-    socketiocon.run(app, debug=True, host="192.168.1.66")
-    #socketiocon.run(app, debug=True)
+    #socketiocon.run(app, debug=True, host="192.168.1.66")
+    socketiocon.run(app, debug=True)

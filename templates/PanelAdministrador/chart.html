@@ -1,0 +1,79 @@
+{% extends 'PanelAdministrador/layout.html'%}
+{% block content %}
+<!--Content right-->
+<div class="col-sm-9 col-xs-12 content pt-3 pl-0">
+    <h5 class="mb-0" ><strong>Chartjs Charts</strong></h5>
+    <span class="text-secondary">Charts <i class="fa fa-angle-right"></i> Chart js</span>
+    
+    <div class="row mt-3">
+        <div class="col-sm-6">
+            <!--Line Chart-->
+            <div class="mt-1 mb-3 p-3 button-container bg-white shadow-sm border">
+                <h6 class="mb-2">Line chart</h6>
+                
+                <canvas id="lineChart"  height="150px"></canvas>
+            </div>
+            <!--/Line Chart-->
+
+        </div>
+        
+        
+        <div class="col-sm-6">
+            <!--Area Chart-->
+            <div class="mt-1 mb-3 p-3 button-container  bg-white shadow-sm border">
+                <h6>Area Chart</h6>
+
+                <canvas id="areaChart"  height="150px"></canvas>
+            </div>
+            <!--/Area Table-->
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-sm-6">
+            <!--Bar Chart-->
+            <div class="mt-1 mb-3 p-3 button-container bg-white shadow-sm border">
+                <h6 class="mb-2">Bar chart</h6>
+                
+                <canvas id="barChart"  height="150px"></canvas>
+            </div>
+            <!--/Bar Chart-->
+
+        </div>
+        
+        
+        <div class="col-sm-6">
+            <!--Pie Chart-->
+            <div class="mt-1 mb-3 p-3 button-container  bg-white shadow-sm border">
+                <h6>Pie Chart</h6>
+                
+                <canvas id="pieChart" height="150px"></canvas>
+            </div>
+            <!--/Pie Table-->
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-sm-6">
+            <!--Doughnut Chart-->
+            <div class="mt-1 mb-3 p-3 button-container bg-white shadow-sm border">
+                <h6 class="mb-2">Doughnut chart</h6>
+                
+                <canvas id="doughnutChart" height="150px"></canvas>
+            </div>
+            <!--/Doughnut Chart-->
+
+        </div>
+        
+        
+        <div class="col-sm-6">
+            <!--Radar Chart-->
+            <div class="mt-1 mb-3 p-3 button-container  bg-white shadow-sm border">
+                <h6>Radar Chart</h6>
+
+                <canvas id="radarChart"  height="150px"></canvas>
+            </div>
+            <!--/Radar Table-->
+        </div>
+    </div>
+    {% endblock %}

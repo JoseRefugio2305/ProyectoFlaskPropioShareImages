@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `conversacion` (
   KEY `reluserdestino` (`iduserdestino`),
   CONSTRAINT `reluserdestino` FOREIGN KEY (`iduserdestino`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `reluserremitente` FOREIGN KEY (`iduserremitente`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- La exportación de datos fue deseleccionada.
 
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `publicacion` (
   KEY `RelUsuarioPublica` (`id_usuario`),
   CONSTRAINT `RelUsuarioPublica` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `StatusPublicacion` FOREIGN KEY (`id_status`) REFERENCES `pubstatus` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- La exportación de datos fue deseleccionada.
 
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS `relmensajes` (
   KEY `relidremitente` (`idremitente`),
   CONSTRAINT `relidremitente` FOREIGN KEY (`idremitente`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `relmensajeconversacion` FOREIGN KEY (`idconversacion`) REFERENCES `conversacion` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- La exportación de datos fue deseleccionada.
 
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `relusercomment` (
   KEY `usuario` (`iduser`),
   CONSTRAINT `publicacion` FOREIGN KEY (`idpub`) REFERENCES `publicacion` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `usuario` FOREIGN KEY (`iduser`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- La exportación de datos fue deseleccionada.
 
@@ -131,6 +131,19 @@ CREATE TABLE IF NOT EXISTS `reluserreaction` (
 
 -- La exportación de datos fue deseleccionada.
 
+-- Volcando estructura para tabla bddpinterestchafon.userplaybuscaminas
+CREATE TABLE IF NOT EXISTS `userplaybuscaminas` (
+  `idplayer` int(11) NOT NULL,
+  `dificultad` varchar(30) NOT NULL DEFAULT '',
+  `hardporcent` int(11) NOT NULL DEFAULT '0',
+  `tiempo` int(11) NOT NULL DEFAULT '0',
+  `fechascore` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY `llaveplayer` (`idplayer`),
+  CONSTRAINT `llaveplayer` FOREIGN KEY (`idplayer`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- La exportación de datos fue deseleccionada.
+
 -- Volcando estructura para tabla bddpinterestchafon.userroles
 CREATE TABLE IF NOT EXISTS `userroles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -158,7 +171,27 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   UNIQUE KEY `email` (`email`),
   KEY `UserRol` (`id_rol`),
   CONSTRAINT `UserRol` FOREIGN KEY (`id_rol`) REFERENCES `userroles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- La exportación de datos fue deseleccionada.
+
+-- Volcando estructura para tabla bddpinterestchafon.usuarioadmin
+CREATE TABLE IF NOT EXISTS `usuarioadmin` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `firstname` varchar(150) NOT NULL DEFAULT 'No especificado',
+  `lastname` varchar(150) NOT NULL DEFAULT 'No especificado',
+  `email` varchar(200) NOT NULL,
+  `password` varchar(16) NOT NULL,
+  `url_img` varchar(250) NOT NULL DEFAULT 'static/img/usernotfound.png',
+  `is_active` char(2) NOT NULL DEFAULT '1',
+  `id_rol` int(11) NOT NULL DEFAULT '2',
+  `gender` varchar(3) NOT NULL,
+  `fechanac` date NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`),
+  KEY `rolusuario` (`id_rol`),
+  CONSTRAINT `rolusuario` FOREIGN KEY (`id_rol`) REFERENCES `userroles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 -- La exportación de datos fue deseleccionada.
 
@@ -351,6 +384,15 @@ BEGIN
 END//
 DELIMITER ;
 
+-- Volcando estructura para procedimiento bddpinterestchafon.ConsultarPuntajes
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultarPuntajes`()
+BEGIN
+	SELECT u.id, u.first_name, u.last_name, u.url_img, s.* FROM usuario AS u INNER JOIN userplaybuscaminas AS s ON u.id=s.idplayer
+	ORDER BY s.dificultad,s.tiempo ASC;
+END//
+DELIMITER ;
+
 -- Volcando estructura para procedimiento bddpinterestchafon.ConsultarSeguidores
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultarSeguidores`(
@@ -394,6 +436,41 @@ BEGIN
 	then
 	INSERT INTO conversacion (iduserremitente, iduserdestino) values(idremiten,iddest);
 	end if;
+END//
+DELIMITER ;
+
+-- Volcando estructura para procedimiento bddpinterestchafon.CREATEpuntaje
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `CREATEpuntaje`(
+	IN `iduserplayer` INT,
+	IN `tiempojuego` INT
+,
+	IN `hardpor` INT,
+	IN `dificult` VARCHAR(50)
+
+
+
+
+
+
+)
+BEGIN
+	if exists(select * from userplaybuscaminas where idplayer=iduserplayer and dificultad=dificult)
+	then
+		if tiempojuego<(select tiempo from userplaybuscaminas where idplayer=iduserplayer and dificultad=dificult)
+		then
+			UPDATE userplaybuscaminas
+				set hardporcent=hardpor,
+					 tiempo=tiempojuego,
+					 fechascore=current_timestamp()
+				WHERE idplayer=iduserplayer and dificultad=dificult;
+			
+		end if;
+	else
+		INSERT INTO userplaybuscaminas (idplayer, dificultad, hardporcent, tiempo)
+		VALUES(iduserplayer,dificult,hardpor,tiempojuego);
+	end if;
+	
 END//
 DELIMITER ;
 
@@ -480,6 +557,25 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `INSERTreaccion`(
 )
 BEGIN
 	INSERT INTO reluserreaction (idUser, idReaction, idPub) VALUES (idusertor, reaccion, idpublic);
+END//
+DELIMITER ;
+
+-- Volcando estructura para procedimiento bddpinterestchafon.Loggin
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Loggin`(
+	IN `emaillogin` VARCHAR(250),
+	IN `passwordlogin` VARCHAR(50)
+
+
+)
+    COMMENT 'Es para revisar si el usuario esta intentando entrar como usuario normal o administrador'
+BEGIN
+	if emaillogin like '/admin:%'
+	then
+	SELECT * FROM usuarioadmin WHERE email like SUBSTRING_INDEX(emaillogin,'/admin:',-1) AND password=passwordlogin AND is_active='1';
+	else 
+	SELECT * FROM usuario WHERE email=emaillogin AND password=passwordlogin AND is_active='1';
+	end if;
 END//
 DELIMITER ;
 
