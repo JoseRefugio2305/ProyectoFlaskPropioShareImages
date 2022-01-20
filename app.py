@@ -245,27 +245,55 @@ def seePublication(pub):
     data = cur.fetchall()
     if (data):
         data=data[0]
-        #Obtenemos ahora los comentarios
-        cur2=mysql.connection.cursor()
-        cur2.execute("CALL `PublicationComments`({0})".format(pub))
-        data2=cur2.fetchall()
-        cur3=mysql.connection.cursor()
-        cur3.execute("SELECT COUNT(*) FROM reluserreaction WHERE idPub={0} AND idReaction=1".format(pub))
-        data3=cur3.fetchall()
-        if(data3):
-            data3=data3[0]
-        else:
-            data3=['']
-        if (is_logged()):
-            cur4=mysql.connection.cursor()
-            cur4.execute("SELECT * FROM reluserreaction WHERE idPub={0} AND idReaction=1 AND idUser={1}".format(pub, session["id_user"]))
-            data4=cur4.fetchall()
-            if(len(data4)>0):
-                data4=['fas fa-heart', 'red']
+        if(data[4]==3 and int(session['id_user'])==data[5]):
+            
+            #Obtenemos ahora los comentarios
+            cur2=mysql.connection.cursor()
+            cur2.execute("CALL `PublicationComments`({0})".format(pub))
+            data2=cur2.fetchall()
+            cur3=mysql.connection.cursor()
+            cur3.execute("SELECT COUNT(*) FROM reluserreaction WHERE idPub={0} AND idReaction=1".format(pub))
+            data3=cur3.fetchall()
+            if(data3):
+                data3=data3[0]
+            else:
+                data3=['']
+            if (is_logged()):
+                cur4=mysql.connection.cursor()
+                cur4.execute("SELECT * FROM reluserreaction WHERE idPub={0} AND idReaction=1 AND idUser={1}".format(pub, session["id_user"]))
+                data4=cur4.fetchall()
+                if(len(data4)>0):
+                    data4=['fas fa-heart', 'red']
+                else:
+                    data4=['far fa-heart', 'black']
+            else:
+                data4=['far fa-heart', 'black']
+        if(data[4]==1):
+            #Obtenemos ahora los comentarios
+            cur2=mysql.connection.cursor()
+            cur2.execute("CALL `PublicationComments`({0})".format(pub))
+            data2=cur2.fetchall()
+            cur3=mysql.connection.cursor()
+            cur3.execute("SELECT COUNT(*) FROM reluserreaction WHERE idPub={0} AND idReaction=1".format(pub))
+            data3=cur3.fetchall()
+            if(data3):
+                data3=data3[0]
+            else:
+                data3=['']
+            if (is_logged()):
+                cur4=mysql.connection.cursor()
+                cur4.execute("SELECT * FROM reluserreaction WHERE idPub={0} AND idReaction=1 AND idUser={1}".format(pub, session["id_user"]))
+                data4=cur4.fetchall()
+                if(len(data4)>0):
+                    data4=['fas fa-heart', 'red']
+                else:
+                    data4=['far fa-heart', 'black']
             else:
                 data4=['far fa-heart', 'black']
         else:
-            data4=['far fa-heart', 'black']
+            data2=[0]
+            data3=[0]
+            data4=[0]
     else:
         data2=[0]
         data3=[0]
@@ -376,35 +404,50 @@ def editPublication():
 #Resive el id de la publicacion asi como la opcion, si se borrara o se pondra en privado
 @app.route('/changeStatusPub/<string:idpubopt>')
 def changeStatusPub(idpubopt):
-    cur=mysql.connection.cursor()
-    consulta=''
-    message=''
-    if(idpubopt.split('.')[1]=='1'):
-        consulta="CALL `UPDATEstatusPublication`({0}, {1})".format(2, idpubopt.split('.')[0])
-        mesagge='Tu publicacion fue borrada con exito'
-    elif(idpubopt.split('.')[1]=='2'):
-        consulta="CALL `UPDATEstatusPublication`({0}, {1})".format(3, idpubopt.split('.')[0])
-        mesagge='Se cambio la privacidad con exito. Ahora solo tu podras ver la publicacion'
-    elif(idpubopt.split('.')[1]=='3'):
-        consulta="CALL `UPDATEstatusPublication`({0}, {1})".format(1, idpubopt.split('.')[0])
-        mesagge='Se cambio la privacidad con exito. Ahora todos podran ver la publicacion'
-    elif(idpubopt.split('.')[1]=='4' and int(session['user_rol'])==2):
-        consulta="CALL `UPDATEstatusPublication`({0}, {1})".format(4, idpubopt.split('.')[0])
-        mesagge='Administrador elimino la publicacion con exito'
-    cur.execute(consulta)
-    mysql.connection.commit()
-    if(idpubopt.split('.')[1]=='4' and int(session['user_rol'])==2):
-        cur1=mysql.connection.cursor()
-        cur1.execute("""CALL `seePublication`({0},2)""".format(idpubopt.split('.')[0]))
-        data2=cur1.fetchall()
-        return jsonify(mesagge=mesagge, newdelete=data2)
-    elif (idpubopt.split('.')[1]=='3' and int(session['user_rol'])==2):
-        cur1=mysql.connection.cursor()
-        cur1.execute("""CALL `seePublication`({0},1)""".format(idpubopt.split('.')[0]))
-        data2=cur1.fetchall()
-        return jsonify(mesagge=mesagge, newdelete=data2)
+    if(is_logged()):
+        con=mysql.connection.cursor()
+        consultaexistpub=''
+        if(idpubopt.split('.')[1]=='3' and int(session["user_rol"])==2):
+            consultaexistpub="""CALL `seePublication`({0},2)""".format(idpubopt.split('.')[0])
+        else:
+            consultaexistpub="""CALL `seePublication`({0},1)""".format(idpubopt.split('.')[0])
+        con.execute(consultaexistpub)
+        datapub=con.fetchall()
+        if (datapub):
+            if(int(datapub[0][5])==int(session["id_user"]) or int(session["user_rol"])==2):
+                cur=mysql.connection.cursor()
+                consulta=''
+                mesagge=''
+                if(idpubopt.split('.')[1]=='1'):
+                    consulta="CALL `UPDATEstatusPublication`({0}, {1})".format(2, idpubopt.split('.')[0])
+                    mesagge='Tu publicacion fue borrada con exito'
+                elif(idpubopt.split('.')[1]=='2'):
+                    consulta="CALL `UPDATEstatusPublication`({0}, {1})".format(3, idpubopt.split('.')[0])
+                    mesagge='Se cambio la privacidad con exito. Ahora solo tu podras ver la publicacion'
+                elif(idpubopt.split('.')[1]=='3'):
+                    consulta="CALL `UPDATEstatusPublication`({0}, {1})".format(1, idpubopt.split('.')[0])
+                    mesagge='Se cambio la privacidad con exito. Ahora todos podran ver la publicacion'
+                elif(idpubopt.split('.')[1]=='4' and int(session['user_rol'])==2):
+                    consulta="CALL `UPDATEstatusPublication`({0}, {1})".format(4, idpubopt.split('.')[0])
+                    mesagge='Administrador elimino la publicacion con exito'
+                cur.execute(consulta)
+                mysql.connection.commit()
+                if(idpubopt.split('.')[1]=='4' and int(session['user_rol'])==2):
+                    cur1=mysql.connection.cursor()
+                    cur1.execute("""CALL `seePublication`({0},2)""".format(idpubopt.split('.')[0]))
+                    data2=cur1.fetchall()
+                    return jsonify(mesagge=mesagge, newdelete=data2)
+                elif (idpubopt.split('.')[1]=='3' and int(session['user_rol'])==2):
+                    cur1=mysql.connection.cursor()
+                    cur1.execute("""CALL `seePublication`({0},1)""".format(idpubopt.split('.')[0]))
+                    data2=cur1.fetchall()
+                    return jsonify(mesagge=mesagge, newdelete=data2)
+                else:
+                    return jsonify(mesagge=mesagge)
+            else:
+                return redirect(url_for('home'))
     else:
-        return jsonify(mesagge=mesagge)
+        return redirect(url_for('home'))
     
 
 @app.route('/commentPub', methods=['POST'])
@@ -562,26 +605,39 @@ def AdministratorPanel(iduseradmin):
 
 @app.route('/getDataIndexAP/')
 def getDataIndexAP():
-    cur=mysql.connection.cursor()
-    cur.execute("CALL `EtadGraficaIndexAP`()")
-    data=cur.fetchall()
-    cur2=mysql.connection.cursor()
-    cur2.execute("CALL `EstNumUsersGenYNumPubsGen`('1')")
-    data2=cur2.fetchall()
-    cur3=mysql.connection.cursor()
-    cur3.execute("CALL `EstNumUsersGenYNumPubsGen`('2')")
-    data3=cur3.fetchall()
-    return jsonify(datagraf=data, datagrafusers=data2, datagrafpubbygenero=data3)
+    if(is_logged()):
+        if(session['user_rol']==2):
+            cur=mysql.connection.cursor()
+            cur.execute("CALL `EtadGraficaIndexAP`()")
+            data=cur.fetchall()
+            cur2=mysql.connection.cursor()
+            cur2.execute("CALL `EstNumUsersGenYNumPubsGen`('1')")
+            data2=cur2.fetchall()
+            cur3=mysql.connection.cursor()
+            cur3.execute("CALL `EstNumUsersGenYNumPubsGen`('2')")
+            data3=cur3.fetchall()
+            return jsonify(datagraf=data, datagrafusers=data2, datagrafpubbygenero=data3)
+        else:
+            return redirect(url_for('home'))
+    else:
+            return redirect(url_for('home'))
 
 @app.route('/reviewPosts/')
 def reviewPosts():
-    cur=mysql.connection.cursor()
-    cur.execute("CALL `ConsultarPublicacionesAP`(1)")
-    data=cur.fetchall()
-    cur1=mysql.connection.cursor()
-    cur1.execute("CALL `ConsultarPublicacionesAP`(2)")
-    data2=cur1.fetchall()
-    return render_template('PanelAdministrador/datatable.html',publications=data, pubsdeleted=data2)
+    if(is_logged()):
+        if(session['user_rol']==2):
+            cur=mysql.connection.cursor()
+            cur.execute("CALL `ConsultarPublicacionesAP`(1)")
+            data=cur.fetchall()
+            cur1=mysql.connection.cursor()
+            cur1.execute("CALL `ConsultarPublicacionesAP`(2)")
+            data2=cur1.fetchall()
+            return render_template('PanelAdministrador/datatable.html',publications=data, pubsdeleted=data2)
+        else:
+            return redirect(url_for('home'))
+    else:
+            return redirect(url_for('home'))
+    
 #rutas de juego
 @app.route('/juegos')
 def ShowGames():

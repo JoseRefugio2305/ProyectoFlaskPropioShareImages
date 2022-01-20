@@ -240,6 +240,14 @@ ese posible mensaje a messages, with es la forma de declarar una variable cuando
             });
         }
     }
+    //con este metodo se puede saber cuando se llegaal final de la pagina
+    /*$(window).on("scroll", function() {
+    var scrollHeight = $(document).height();
+    var scrollPosition = $(window).height() + $(window).scrollTop();
+    if ((scrollHeight - scrollPosition) / scrollHeight === 0) {
+        alert("Ha llegado al final de la página");
+    }
+    });*/
     /*
     window.addEventListener('resize', function(e){
         console.log('gola');
