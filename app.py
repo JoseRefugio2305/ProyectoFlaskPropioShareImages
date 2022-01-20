@@ -1,5 +1,6 @@
 
 from datetime import datetime
+from email import message
 import os
 from flask import Flask,render_template, request, redirect, session,url_for, flash, jsonify
 from flask_mysqldb import MySQL
@@ -240,7 +241,7 @@ def updateUser():
 def seePublication(pub):
     #obtenemos los datos solo de la publicacion
     cur=mysql.connection.cursor()
-    cur.execute("""CALL `seePublication`({0})""".format(pub))
+    cur.execute("""CALL `seePublication`({0},1)""".format(pub))
     data = cur.fetchall()
     if (data):
         data=data[0]
@@ -377,6 +378,7 @@ def editPublication():
 def changeStatusPub(idpubopt):
     cur=mysql.connection.cursor()
     consulta=''
+    message=''
     if(idpubopt.split('.')[1]=='1'):
         consulta="CALL `UPDATEstatusPublication`({0}, {1})".format(2, idpubopt.split('.')[0])
         mesagge='Tu publicacion fue borrada con exito'
@@ -385,11 +387,25 @@ def changeStatusPub(idpubopt):
         mesagge='Se cambio la privacidad con exito. Ahora solo tu podras ver la publicacion'
     elif(idpubopt.split('.')[1]=='3'):
         consulta="CALL `UPDATEstatusPublication`({0}, {1})".format(1, idpubopt.split('.')[0])
-        mesagge='Se cambio la privacidad con exito. Ahora solo tu podras ver la publicacion'
+        mesagge='Se cambio la privacidad con exito. Ahora todos podran ver la publicacion'
+    elif(idpubopt.split('.')[1]=='4' and int(session['user_rol'])==2):
+        consulta="CALL `UPDATEstatusPublication`({0}, {1})".format(4, idpubopt.split('.')[0])
+        mesagge='Administrador elimino la publicacion con exito'
     cur.execute(consulta)
     mysql.connection.commit()
+    if(idpubopt.split('.')[1]=='4' and int(session['user_rol'])==2):
+        cur1=mysql.connection.cursor()
+        cur1.execute("""CALL `seePublication`({0},2)""".format(idpubopt.split('.')[0]))
+        data2=cur1.fetchall()
+        return jsonify(mesagge=mesagge, newdelete=data2)
+    elif (idpubopt.split('.')[1]=='3' and int(session['user_rol'])==2):
+        cur1=mysql.connection.cursor()
+        cur1.execute("""CALL `seePublication`({0},1)""".format(idpubopt.split('.')[0]))
+        data2=cur1.fetchall()
+        return jsonify(mesagge=mesagge, newdelete=data2)
+    else:
+        return jsonify(mesagge=mesagge)
     
-    return jsonify(mesagge=mesagge)
 
 @app.route('/commentPub', methods=['POST'])
 def commentPub():
@@ -549,15 +565,23 @@ def getDataIndexAP():
     cur=mysql.connection.cursor()
     cur.execute("CALL `EtadGraficaIndexAP`()")
     data=cur.fetchall()
-    
-    return jsonify(datagraf=data)
+    cur2=mysql.connection.cursor()
+    cur2.execute("CALL `EstNumUsersGenYNumPubsGen`('1')")
+    data2=cur2.fetchall()
+    cur3=mysql.connection.cursor()
+    cur3.execute("CALL `EstNumUsersGenYNumPubsGen`('2')")
+    data3=cur3.fetchall()
+    return jsonify(datagraf=data, datagrafusers=data2, datagrafpubbygenero=data3)
 
 @app.route('/reviewPosts/')
 def reviewPosts():
     cur=mysql.connection.cursor()
-    cur.execute("CALL `ConsultarPublicacionesAP`()")
+    cur.execute("CALL `ConsultarPublicacionesAP`(1)")
     data=cur.fetchall()
-    return render_template('PanelAdministrador/datatable.html',publications=data)
+    cur1=mysql.connection.cursor()
+    cur1.execute("CALL `ConsultarPublicacionesAP`(2)")
+    data2=cur1.fetchall()
+    return render_template('PanelAdministrador/datatable.html',publications=data, pubsdeleted=data2)
 #rutas de juego
 @app.route('/juegos')
 def ShowGames():

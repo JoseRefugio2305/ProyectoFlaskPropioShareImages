@@ -50,4 +50,13 @@ SELECT u.* FROM usuario AS u INNER JOIN reluserfollowuser AS rufu ON u.id=rufu.i
 
 
 SELECT u.*, s.* FROM usuario AS u INNER JOIN userplaybuscaminas AS s ON u.id=s.idplayer
-ORDER BY s.dificultad,s.tiempo ASC
+ORDER BY s.dificultad,s.tiempo ASC;
+
+SELECT u.gender,COUNT(*) FROM usuario AS u WHERE u.is_active='1'
+GROUP BY u.gender;
+
+SELECT COUNT(*) FROM publicacion AS p INNER JOIN usuario AS u ON p.id_usuario=u.id WHERE u.gender LIKE 'H'
+UNION ALL
+SELECT COUNT(*) FROM publicacion AS p INNER JOIN usuario AS u ON p.id_usuario=u.id WHERE u.gender LIKE 'M'
+UNION ALL 
+SELECT COUNT(*) FROM publicacion AS p INNER JOIN usuario AS u ON p.id_usuario=u.id WHERE u.gender LIKE 'O'

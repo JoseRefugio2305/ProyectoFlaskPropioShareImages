@@ -275,15 +275,15 @@
             options: doughnutPieOptions
           });
         }
-      
-        if ($("#pieChart").length) {
-          var pieChartCanvas = $("#pieChart").get(0).getContext("2d");
-          var pieChart = new Chart(pieChartCanvas, {
-            type: 'pie',
-            data: doughnutPieData,
-            options: doughnutPieOptions
-          });
-        }
+        //Aqui iba la parte del pieChart el if don de se activava
+        //if ($("#pieChart").length) {
+        //  var pieChartCanvas = $("#pieChart").get(0).getContext("2d");
+        //  var pieChart = new Chart(pieChartCanvas, {
+        //   type: 'pie',
+        //    data: doughnutPieData,
+        //    options: doughnutPieOptions
+        //  });
+        //}
       
         if ($("#areaChart").length) {
           var areaChartCanvas = $("#areaChart").get(0).getContext("2d");

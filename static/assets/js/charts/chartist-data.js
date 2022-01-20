@@ -123,10 +123,99 @@ $(function() {
           
     }
     
+    $.getJSON('/getDataIndexAP/', function(datadata){
+    //Dashboard revenue vs cost
+    var doughnutPieData = {
+      datasets: [{
+        data: [datadata.datagrafusers[0][1]*100/datadata.datagrafusers[0][2],datadata.datagrafusers[1][1]*100/datadata.datagrafusers[1][2],datadata.datagrafusers[2][1]*100/datadata.datagrafusers[2][2]],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.5)',
+          'rgba(54, 162, 235, 0.5)',
+          'rgba(255, 206, 86, 0.5)',
+          'rgba(75, 192, 192, 0.5)',
+          'rgba(153, 102, 255, 0.5)',
+          'rgba(255, 159, 64, 0.5)'
+        ],
+        borderColor: [
+          'rgba(255,99,132,1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)'
+        ],
+      }],
+  
+      // These labels appear in the legend and in the tooltips when hovering different arcs
+      labels: [
+        'Hombres',
+        'Mujeres',
+        'Otros',
+      ]
+    };
+    var doughnutPieOptions = {
+      responsive: true,
+      animation: {
+        animateScale: true,
+        animateRotate: true
+      }
+    };
+    if ($("#pieChart").length) {
+      var pieChartCanvas = $("#pieChart").get(0).getContext("2d");
+      var pieChart = new Chart(pieChartCanvas, {
+        type: 'pie',
+        data: doughnutPieData,
+        options: doughnutPieOptions
+      });
+    }
 
     //Dashboard revenue vs cost
+    var doughnutPieData2 = {
+      datasets: [{
+        data: [datadata.datagrafpubbygenero[0][0]*100/datadata.datagrafpubbygenero[0][1],datadata.datagrafpubbygenero[1][0]*100/datadata.datagrafpubbygenero[1][1],datadata.datagrafpubbygenero[2][0]*100/datadata.datagrafpubbygenero[2][1]],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.5)',
+          'rgba(54, 162, 235, 0.5)',
+          'rgba(255, 206, 86, 0.5)',
+          'rgba(75, 192, 192, 0.5)',
+          'rgba(153, 102, 255, 0.5)',
+          'rgba(255, 159, 64, 0.5)'
+        ],
+        borderColor: [
+          'rgba(255,99,132,1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)'
+        ],
+      }],
+  
+      // These labels appear in the legend and in the tooltips when hovering different arcs
+      labels: [
+        'Hombres',
+        'Mujeres',
+        'Otros',
+      ]
+    };
+    var doughnutPieOptions2 = {
+      responsive: true,
+      animation: {
+        animateScale: true,
+        animateRotate: true
+      }
+    };
+    if ($("#pieChartPublicacionesPorgGenero").length) {
+      var pieChartCanvas2 = $("#pieChartPublicacionesPorgGenero").get(0).getContext("2d");
+      var pieChart2 = new Chart(pieChartCanvas2, {
+        type: 'pie',
+        data: doughnutPieData2,
+        options: doughnutPieOptions2
+      });
+    }
+
     if($("#costRevenue").length) {
-      $.getJSON('/getDataIndexAP/', function(datadata){
+      
         var data = {
           labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
           series: [
@@ -153,9 +242,10 @@ $(function() {
       ];
         
       new Chartist.Bar('#costRevenue', data, options, responsiveOptions);
-    });
+   
         
     }
+  });
 
     //Dashboard facebook users chat
     if($("#areaChartFb").length) {
