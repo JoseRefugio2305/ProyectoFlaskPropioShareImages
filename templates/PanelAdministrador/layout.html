@@ -101,24 +101,21 @@
                         <ul class="sidebar-menu mt-4 mb-4">
                             <li class="parent">
                                 <a href="#" onclick="toggle_menu('dashboard'); return false" class=""><i class="fa fa-dashboard mr-3"> </i>
-                                    <span class="none">Dashboard <i class="fa fa-angle-down pull-right align-bottom"></i></span>
+                                    <span class="none">Panel <i class="fa fa-angle-down pull-right align-bottom"></i></span>
                                 </a>
                                 <ul class="children" id="dashboard">
                                     <li class="child"><a href="/AdministratorPanel/{{session.id_user}}" class="ml-4"><i class="fa fa-angle-right mr-2"></i> Inicio</a></li>
                                     <li class="child"><a href="/reviewPosts/" class="ml-4"><i class="fa fa-angle-right mr-2"></i>Publicaciones</a></li>
+                                    <li class="child"><a href="/reviewUsers/" class="ml-4"><i class="fa fa-angle-right mr-2"></i>Usuarios</a></li>
                                     
                                 </ul>
                             </li>
                             </li>
                             
                             <li class="parent">
-                                <a href="#" onclick="toggle_menu('charts'); return false" class=""><i class="fa fa-pie-chart mr-3"></i>
-                                    <span class="none">Charts <i class="fa fa-angle-down pull-right align-bottom"></i></span>
+                                <a href="/" ><i class="fas fa-arrow-left"></i>
+                                    <span class="none">Salir</span>
                                 </a>
-                                <ul class="children" id="charts">
-                                    <li class="child"><a href="chart.html" class="ml-4"><i class="fa fa-angle-right mr-2"></i> Chart JS</a></li>
-                                    
-                                </ul>
                             </li>
                             
                         </ul>

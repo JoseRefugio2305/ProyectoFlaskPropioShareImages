@@ -419,7 +419,28 @@
 
     function comment(idpub)
     {
-        document.getElementById('formComment').submit();
+        var comentario=document.getElementById('txtcomment').value;
+        var isvacio=true;
+        for(var a=0;a<comentario.length;a++)
+        {
+            if(comentario.charCodeAt(a)!=32)
+            {
+                isvacio=false;
+                break;
+            }
+        }
+        if(isvacio)
+        {
+            Swal.fire(
+            'Oops!',
+            'No puedes realizar comantarios vacios',
+            'error'
+            )
+        }
+        else{
+            document.getElementById('formComment').submit();
+        }
+        
     }
 </script>
 {% endblock %}

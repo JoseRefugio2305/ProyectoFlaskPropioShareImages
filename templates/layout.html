@@ -69,7 +69,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a  class="nav-link"href="/juegos" data-toggle="tooltip" data-placement="bottom" title="Chats">
+                        <a  class="nav-link"href="/juegos" data-toggle="tooltip" data-placement="bottom" title="Juegos">
                             <i class="fas fa-gamepad"></i>
                         </a>
                     </li>
@@ -98,11 +98,11 @@
                     
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="modal" data-target="#LoginModal">Iniciar Sesión</a>
+                        <a class="nav-link" href="/SiginSignup/SignIn">Iniciar Sesión</a>
                         
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link btn btn-primary" data-toggle="modal" data-target="#RegisterModal" style="color: white;">Registrarse</a>
+                        <a class="nav-link btn btn-primary" href="/SiginSignup/SignUp"style="color: white;">Registrarse</a>
                     </li>
                 {% endif %}
             </ul>
@@ -115,100 +115,7 @@
         {% endblock %}
     </div>
 
-    <!--Modal para el registro de usuario-->
-    <div class="modal fade" id="RegisterModal" tabindex="-1" role="dialog" aria-labelledby="RegisterModalTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Resgistrate</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="/addUser" method="POST">
-                    <div class="form-group">
-                        <p>Ingresa Tu Nombre(s)</p>
-                        <input class="form-control" type="text" required name="firstname" placeholder="Nombre(s)">
-                    </div>
-                    <div class="form-group">
-                        <p>Ingresa Tu Apellido(s)</p>
-                        <input class="form-control" type="text" required name="lastname" placeholder="Apellido(s)">
-                    </div>
-                    <div class="form-group">
-                        <p>Ingresa Tu Correo Electronico</p>
-                        <input class="form-control" type="email" required name="email" placeholder="E-mail">
-                    </div>
-                    <div class="form-group">
-                        <p>Ingresa Su Contrasena (6 a 10 caracteres)</p>
-                        <input class="form-control" pattern=".{6,10}" type="password" required name="password" placeholder="Contrasena">
-                    </div>
-                    <div class="form-group">
-                        <p>Ingresa Tu Genero</p>
-                        <select class="form-control" required name="genero">
-                            <option value="" disabled selected hidden>Selecciona</option>
-                            <option value="M">Mujer</option>
-                            <option value="H">Hombre</option>
-                            <option value="O">Otro</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <p>Ingresa Tu Fecha de Nacimiento</p>
-                        <input class="form-control" required type="date" name="date" placeholder="Fecha de Nacimiento">
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-success " type="submit">
-                            Registrarse
-                        </button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <p>
-                    ¿Ya tienes una cuenta?<u><a data-dismiss="modal" data-toggle="modal" data-target="#LoginModal">Iniciar Sesión</a></u>
-                </p>
-            </div>
-            </div>
-        </div>
-    </div>
-
-    <!--Modal de Inicio de sesion-->
-    <div class="modal fade" id="LoginModal" tabindex="-1" role="dialog" aria-labelledby="LoginModalTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Resgistrate</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="/loginUser" method="POST">
-                    <div class="form-group">
-                        <p>Ingresa Tu Correo Electronico</p>
-                        <input class="form-control" required type="text" name="email" placeholder="E-mail">
-                    </div>
-                    <div class="form-group">
-                        <p>Ingresa Su Contrasena</p>
-                        <input class="form-control"pattern=".{6,10}"  type="password" required name="password" placeholder="Contrasena">
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-success " type="submit">
-                            Iniciar Sesion
-                        </button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <p>
-                    ¿Aun no tienes una cuenta?<u><a data-dismiss="modal" data-toggle="modal" data-target="#RegisterModal">Registrate</a></u>
-                </p>
-            </div>
-            </div>
-        </div>
-    </div>
+    
 
 
     

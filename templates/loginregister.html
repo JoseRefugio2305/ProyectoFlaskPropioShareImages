@@ -1,0 +1,113 @@
+{% extends 'layout.html'%}
+{%block content%}
+<!--Campo de inicio de session-->
+<div class="" style="text-align: center;">
+    <img class="" src="/static/img/icon.png" alt="" width="90" height="90">
+</div>
+{% if showlogin=='true'%}
+<div class="col-md-8 offset-md-2" id="divlogin">
+{% elif  showlogin=='false'%}
+<div class="col-md-8 offset-md-2" id="divlogin" style="display: none;" >
+{% endif %}
+    <div class="card card-body">
+        <h3>Iniciar Sesion</h3>
+        <form action="/loginUser" method="POST">
+            <div class="form-group">
+                <p>Ingresa Tu Correo Electronico</p>
+                <input class="form-control" required type="text" name="email" placeholder="E-mail">
+            </div>
+            <div class="form-group">
+                <p>Ingresa Su Contrasena</p>
+                <input class="form-control"pattern=".{6,10}"  type="password" required name="password" placeholder="Contrasena">
+            </div>
+            <div class="form-group col-md-12" style="text-align: center;">
+                <button class="btn btn-success col-md-5" type="submit" style="font-weight: bold;">
+                    Iniciar Sesion
+                </button>
+                <button type="button" class="btn btn-secondary col-md-5 offset-md-1" style="font-weight: bold;" data-dismiss="modal">Cancelar</button>
+            </div>
+        </form>
+        <div class="footer" style="text-align: right;">
+            <p>
+                ¿Aun no tienes una cuenta? <u><a onclick="ShowForm('Register')">Registrate</a></u>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!--Campo para registrar el usuario-->
+{% if showreg=='true'%}
+<div class="col-md-8 offset-md-2" id="divregister">
+{% elif  showreg=='false'%}
+<div class="col-md-8 offset-md-2" id="divregister" style="display: none;" >
+{% endif %}
+    <div class="card card-body">
+        <h3 >Registrate</h3>
+        <form action="/addUser" method="POST">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <p>Ingresa Tu Nombre(s)</p>
+                        <input class="form-control" type="text" required name="firstname" placeholder="Nombre(s)">
+                    </div>
+                    <div class="form-group">
+                        <p>Ingresa Tu Apellido(s)</p>
+                        <input class="form-control" type="text" required name="lastname" placeholder="Apellido(s)">
+                    </div>
+                    <div class="form-group">
+                        <p>Ingresa Tu Correo Electronico</p>
+                        <input class="form-control" type="email" required name="email" placeholder="E-mail">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <p>Ingresa Su Contrasena (6 a 10 caracteres)</p>
+                        <input class="form-control" pattern=".{6,10}" type="password" required name="password" placeholder="Contrasena">
+                    </div>
+                    <div class="form-group">
+                        <p>Ingresa Tu Genero</p>
+                        <select class="form-control" required name="genero">
+                            <option value="" disabled selected hidden>Selecciona</option>
+                            <option value="M">Mujer</option>
+                            <option value="H">Hombre</option>
+                            <option value="O">Otro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <p>Ingresa Tu Fecha de Nacimiento</p>
+                        <input class="form-control" required type="date" name="date" placeholder="Fecha de Nacimiento">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group col-md-12">
+                <button class="btn btn-success col-md-5" type="submit" style="font-weight: bold;">
+                    Registrarse
+                </button>
+                <button type="button" class="btn btn-secondary col-md-5 offset-md-1" data-dismiss="modal" style="font-weight: bold;">Cancelar</button>
+            </div>
+        </form>
+        <div class="footer" style="text-align: right;">
+            <p>
+                ¿Ya tienes una cuenta? <u><a onclick="ShowForm('Login')">Iniciar Sesión</a></u>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function ShowForm(option)
+    {
+        if(option=='Login')
+        {
+            document.getElementById('divlogin').style.display='';
+            document.getElementById('divregister').style.display='none';
+
+        }
+        else{
+            document.getElementById('divlogin').style.display='none';
+            document.getElementById('divregister').style.display='';
+        }
+    }
+</script>
+{%endblock%}

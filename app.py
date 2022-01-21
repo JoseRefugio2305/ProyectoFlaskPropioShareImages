@@ -1,7 +1,9 @@
 
 from datetime import datetime
 from email import message
+import json
 import os
+from pickletools import read_uint1
 from flask import Flask,render_template, request, redirect, session,url_for, flash, jsonify
 from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
@@ -49,13 +51,28 @@ def home():
 
     return render_template('index.html', publications = data, relevantes=data2)
 
+#Con esta se reenderiza la plnatilla de inicio de sesion y registro
+@app.route('/SiginSignup/<string:option>')
+def SiginSignup(option):
+    if (is_logged()):
+        return redirect(url_for('home'))
+    else:
+        if(option.upper()=='SIGNIN'):
+            login='true'
+            register='false'
+        else:
+            login='false'
+            register='true'
+        return render_template('loginregister.html', showlogin=login, showreg=register)
+
+#Esta es para llevar a cabo el registro del usuario en la BDD y lo demas necesario
 @app.route('/addUser', methods=['POST'])
 def addUser():
     if request.method == 'POST':#se revisa si se entro a la ruta con datos por medio del metodo POST
         #se reciben los datos ingresados en el formulario
         mensaje = ""
         messagetype=""
-        email = request.form['email']
+        email = request.form['email'].lower()
         cur = mysql.connection.cursor()
         cur.execute("SELECT * FROM usuario WHERE email='{0}'".format(email))
         if (cur.fetchall()):
@@ -86,14 +103,14 @@ def addUser():
 
         flash(mensaje,messagetype)
         return redirect(url_for('home'))
-
+#Esta es para llevar a cabo el logeo del usuario comprobando en la BDD y creando las sessions
 @app.route('/loginUser', methods=['POST'])
 def loginUser():
     if request.method == 'POST':#se revisa si se entro a la ruta con datos por medio del metodo POST
         #se reciben los datos ingresados en el formulario
         mensaje=''
         messagetype=''
-        email = request.form['email']
+        email = request.form['email'].lower()
         password = request.form['password']
 
         cur = mysql.connection.cursor()
@@ -119,6 +136,7 @@ def loginUser():
             messagetype='warning'
         flash(mensaje, messagetype)
         return redirect(url_for('home'))
+
 
 
 @app.route('/UserProfile/<idprofile>')
@@ -343,15 +361,29 @@ def like(idpub):
 
 @app.route('/crearPublicacion/<option>')
 def crearPublicacion(option):
-    ##Crear publicacion tambien se usacuando se quiere editar un publicacion, si resibe 0 es que se quiere crear una
-    #si recibe un valor diferente quiere decir que es un id de alguna publicacion por lo que quiere editar una publicacion
-    if(int(option)==0):
-        data=[0]
+    if(is_logged()):
+        ##Crear publicacion tambien se usacuando se quiere editar un publicacion, si resibe 0 es que se quiere crear una
+        #si recibe un valor diferente quiere decir que es un id de alguna publicacion por lo que quiere editar una publicacion
+        if(int(option)==0):
+            data=[0]
+        else:
+            cur=mysql.connection.cursor()
+            cur.execute("""CALL `seePublication`({0},1)""".format(option))
+            data=cur.fetchall()
+            if (data):
+                if(int(data[0][5])==int(session["id_user"])):
+                    data=data[0]
+                else:
+                    flash("No puedes editar publicaciones inexistentes o que fueron creadas por otro usuario", "warning")
+                    return redirect(url_for('home'))
+            else:
+                flash("No puedes editar publicaciones inexistentes o que fueron creadas por otro usuario", "warning")
+                return redirect(url_for('home'))
+
+        return render_template('crearPublicacion.html', datapub=data)
     else:
-        cur=mysql.connection.cursor()
-        cur.execute("SELECT * FROM publicacion WHERE id={0}".format(option))
-        data=cur.fetchall()[0]
-    return render_template('crearPublicacion.html', datapub=data)
+        flash("Debes iniciar sesion para poder crear una publicacion", "warning")
+        return redirect(url_for('home'))
 
 @app.route('/addPublication', methods=["POST"])
 def addPublication():
@@ -632,12 +664,43 @@ def reviewPosts():
             cur1=mysql.connection.cursor()
             cur1.execute("CALL `ConsultarPublicacionesAP`(2)")
             data2=cur1.fetchall()
-            return render_template('PanelAdministrador/datatable.html',publications=data, pubsdeleted=data2)
+            return render_template('PanelAdministrador/datatablePubs.html',publications=data, pubsdeleted=data2)
         else:
             return redirect(url_for('home'))
     else:
-            return redirect(url_for('home'))
+        return redirect(url_for('home'))
     
+
+@app.route('/reviewUsers/')
+def reviewUsers():
+    if(is_logged()):
+        if(session['user_rol']==2):
+            cur=mysql.connection.cursor()
+            cur.execute("CALL `ConsultarUsuariosAP`(1,0)")
+            data=cur.fetchall()
+            cur1=mysql.connection.cursor()
+            cur1.execute("CALL `ConsultarUsuariosAP`(2,0)")
+            data2=cur1.fetchall()
+            return render_template('PanelAdministrador/datatableUsers.html',uactivedata=data, udelAdata=data2)
+        else:
+            return redirect(url_for('home'))
+    else:
+        return redirect(url_for('home'))
+    
+@app.route('/changeStatusUser/<string:iduseroption>')
+def changeStatusUser(iduseroption):
+    if(is_Admin()):
+        cur=mysql.connection.cursor()
+        cur.execute("CALL `UPDATEstatusUserAP`('{0}', '{1}')".format(iduseroption.split('.')[1], iduseroption.split('.')[0]))
+        mysql.connection.commit()
+        cur1=mysql.connection.cursor()
+        cur1.execute("CALL `ConsultarUsuariosAP`(3,{0})".format(iduseroption.split('.')[0]))
+        data=cur1.fetchall()
+        return jsonify(userdataupd=data)
+    else:
+        return redirect(url_for('home'))
+
+
 #rutas de juego
 @app.route('/juegos')
 def ShowGames():
@@ -709,8 +772,14 @@ def is_logged():
     login = False
     if 'email' in session:
         login=True
-
     return login
+
+def is_Admin():
+    admin=False
+    if (is_logged()):
+        if(session['user_rol']==2):
+            admin=True
+    return admin
 
 #Esta lineas son para indicar que metodos se podran llamar desde jinja2
 app.jinja_env.globals.update(is_logged=is_logged)

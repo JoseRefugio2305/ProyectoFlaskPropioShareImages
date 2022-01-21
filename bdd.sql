@@ -29,7 +29,9 @@ CREATE TABLE IF NOT EXISTS `conversacion` (
   CONSTRAINT `reluserremitente` FOREIGN KEY (`iduserremitente`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- La exportación de datos fue deseleccionada.
+-- Volcando datos para la tabla bddpinterestchafon.conversacion: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `conversacion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `conversacion` ENABLE KEYS */;
 
 -- Volcando estructura para tabla bddpinterestchafon.publicacion
 CREATE TABLE IF NOT EXISTS `publicacion` (
@@ -45,9 +47,15 @@ CREATE TABLE IF NOT EXISTS `publicacion` (
   KEY `RelUsuarioPublica` (`id_usuario`),
   CONSTRAINT `RelUsuarioPublica` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `StatusPublicacion` FOREIGN KEY (`id_status`) REFERENCES `pubstatus` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
--- La exportación de datos fue deseleccionada.
+-- Volcando datos para la tabla bddpinterestchafon.publicacion: ~3 rows (aproximadamente)
+/*!40000 ALTER TABLE `publicacion` DISABLE KEYS */;
+INSERT INTO `publicacion` (`id`, `pub_title`, `pub_des`, `url_archive`, `id_status`, `id_usuario`, `pub_date`) VALUES
+	(1, 'NFT', 'me la robe de una pag de nfts', 'static/img/Publicaciones/1publication/a_17-01-2022_19_59_26_.jpg', 1, 1, '2022-01-17 19:59:26'),
+	(2, 'One Punch Man', 'Publicacion', 'static/img/Publicaciones/1publication/a_18-01-2022_20_33_32_.jpg', 1, 3, '2022-01-18 20:33:32'),
+	(3, 'GIF', 'Primer publicacion realizada', 'static/img/Publicaciones/2publication/a_19-01-2022_21_19_53_.gif', 1, 2, '2022-01-19 21:19:53');
+/*!40000 ALTER TABLE `publicacion` ENABLE KEYS */;
 
 -- Volcando estructura para tabla bddpinterestchafon.pubstatus
 CREATE TABLE IF NOT EXISTS `pubstatus` (
@@ -55,9 +63,16 @@ CREATE TABLE IF NOT EXISTS `pubstatus` (
   `type` varchar(50) NOT NULL,
   `statusdesc` varchar(50) NOT NULL DEFAULT 'Es un estatus',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
--- La exportación de datos fue deseleccionada.
+-- Volcando datos para la tabla bddpinterestchafon.pubstatus: ~2 rows (aproximadamente)
+/*!40000 ALTER TABLE `pubstatus` DISABLE KEYS */;
+INSERT INTO `pubstatus` (`id`, `type`, `statusdesc`) VALUES
+	(1, 'Aprobada', 'Es un estatus'),
+	(2, 'Eliminada', 'Usado cuando la publicacion es eliminada'),
+	(3, 'Privada', 'Cuando la publicacion solo la vera el usuario'),
+	(4, 'Eliminada por administrador', 'Es cuando el administrador la elimina');
+/*!40000 ALTER TABLE `pubstatus` ENABLE KEYS */;
 
 -- Volcando estructura para tabla bddpinterestchafon.reactions
 CREATE TABLE IF NOT EXISTS `reactions` (
@@ -67,7 +82,12 @@ CREATE TABLE IF NOT EXISTS `reactions` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
--- La exportación de datos fue deseleccionada.
+-- Volcando datos para la tabla bddpinterestchafon.reactions: ~2 rows (aproximadamente)
+/*!40000 ALTER TABLE `reactions` DISABLE KEYS */;
+INSERT INTO `reactions` (`id`, `type`, `reactiondesc`) VALUES
+	(1, 'Like', 'Es una reaccion'),
+	(2, 'Dislike', 'Es una reaccion');
+/*!40000 ALTER TABLE `reactions` ENABLE KEYS */;
 
 -- Volcando estructura para tabla bddpinterestchafon.relmensajes
 CREATE TABLE IF NOT EXISTS `relmensajes` (
@@ -83,7 +103,9 @@ CREATE TABLE IF NOT EXISTS `relmensajes` (
   CONSTRAINT `relmensajeconversacion` FOREIGN KEY (`idconversacion`) REFERENCES `conversacion` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- La exportación de datos fue deseleccionada.
+-- Volcando datos para la tabla bddpinterestchafon.relmensajes: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `relmensajes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `relmensajes` ENABLE KEYS */;
 
 -- Volcando estructura para tabla bddpinterestchafon.relusercomment
 CREATE TABLE IF NOT EXISTS `relusercomment` (
@@ -100,7 +122,9 @@ CREATE TABLE IF NOT EXISTS `relusercomment` (
   CONSTRAINT `usuario` FOREIGN KEY (`iduser`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- La exportación de datos fue deseleccionada.
+-- Volcando datos para la tabla bddpinterestchafon.relusercomment: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `relusercomment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `relusercomment` ENABLE KEYS */;
 
 -- Volcando estructura para tabla bddpinterestchafon.reluserfollowuser
 CREATE TABLE IF NOT EXISTS `reluserfollowuser` (
@@ -114,7 +138,9 @@ CREATE TABLE IF NOT EXISTS `reluserfollowuser` (
   CONSTRAINT `FK_usurarioseguido` FOREIGN KEY (`iduserseguido`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- La exportación de datos fue deseleccionada.
+-- Volcando datos para la tabla bddpinterestchafon.reluserfollowuser: ~1 rows (aproximadamente)
+/*!40000 ALTER TABLE `reluserfollowuser` DISABLE KEYS */;
+/*!40000 ALTER TABLE `reluserfollowuser` ENABLE KEYS */;
 
 -- Volcando estructura para tabla bddpinterestchafon.reluserreaction
 CREATE TABLE IF NOT EXISTS `reluserreaction` (
@@ -129,7 +155,11 @@ CREATE TABLE IF NOT EXISTS `reluserreaction` (
   CONSTRAINT `usario` FOREIGN KEY (`idUser`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- La exportación de datos fue deseleccionada.
+-- Volcando datos para la tabla bddpinterestchafon.reluserreaction: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `reluserreaction` DISABLE KEYS */;
+INSERT INTO `reluserreaction` (`idUser`, `idReaction`, `idPub`) VALUES
+	(1, 1, 2);
+/*!40000 ALTER TABLE `reluserreaction` ENABLE KEYS */;
 
 -- Volcando estructura para tabla bddpinterestchafon.userplaybuscaminas
 CREATE TABLE IF NOT EXISTS `userplaybuscaminas` (
@@ -142,7 +172,9 @@ CREATE TABLE IF NOT EXISTS `userplaybuscaminas` (
   CONSTRAINT `llaveplayer` FOREIGN KEY (`idplayer`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- La exportación de datos fue deseleccionada.
+-- Volcando datos para la tabla bddpinterestchafon.userplaybuscaminas: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `userplaybuscaminas` DISABLE KEYS */;
+/*!40000 ALTER TABLE `userplaybuscaminas` ENABLE KEYS */;
 
 -- Volcando estructura para tabla bddpinterestchafon.userroles
 CREATE TABLE IF NOT EXISTS `userroles` (
@@ -153,7 +185,12 @@ CREATE TABLE IF NOT EXISTS `userroles` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
--- La exportación de datos fue deseleccionada.
+-- Volcando datos para la tabla bddpinterestchafon.userroles: ~2 rows (aproximadamente)
+/*!40000 ALTER TABLE `userroles` DISABLE KEYS */;
+INSERT INTO `userroles` (`id`, `type`, `isActive`, `description`) VALUES
+	(1, 'Usuario Normal', '1', 'Es un tipo de rol'),
+	(2, 'Administrador', '1', 'Es el administrador');
+/*!40000 ALTER TABLE `userroles` ENABLE KEYS */;
 
 -- Volcando estructura para tabla bddpinterestchafon.usuario
 CREATE TABLE IF NOT EXISTS `usuario` (
@@ -171,9 +208,16 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   UNIQUE KEY `email` (`email`),
   KEY `UserRol` (`id_rol`),
   CONSTRAINT `UserRol` FOREIGN KEY (`id_rol`) REFERENCES `userroles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
--- La exportación de datos fue deseleccionada.
+-- Volcando datos para la tabla bddpinterestchafon.usuario: ~4 rows (aproximadamente)
+/*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
+INSERT INTO `usuario` (`id`, `first_name`, `last_name`, `email`, `password`, `url_img`, `is_active`, `id_rol`, `gender`, `fechanac`) VALUES
+	(1, 'Jose', 'Refugio', 'refugio@mail.com', '123456', 'static/img/usernotfound.png', '1', 1, 'H', '2000-05-23'),
+	(2, 'No especificado', 'No especificado', 'mail@mail.com', '123456', 'static/img/usernotfound.png', '1', 1, 'M', '2022-01-18'),
+	(3, 'No especificado', 'No especificado', 'otro@mail.com', '123456', 'static/img/usernotfound.png', '1', 1, 'O', '2022-01-19'),
+	(4, 'No especificado', 'No especificado', 'aaaa@mail.com', '123456', 'static/img/usernotfound.png', '3', 1, 'H', '2022-01-19');
+/*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 
 -- Volcando estructura para tabla bddpinterestchafon.usuarioadmin
 CREATE TABLE IF NOT EXISTS `usuarioadmin` (
@@ -189,11 +233,15 @@ CREATE TABLE IF NOT EXISTS `usuarioadmin` (
   `fechanac` date NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
-  KEY `rolusuario` (`id_rol`),
-  CONSTRAINT `rolusuario` FOREIGN KEY (`id_rol`) REFERENCES `userroles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `rol` (`id_rol`),
+  CONSTRAINT `rol` FOREIGN KEY (`id_rol`) REFERENCES `userroles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
--- La exportación de datos fue deseleccionada.
+-- Volcando datos para la tabla bddpinterestchafon.usuarioadmin: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `usuarioadmin` DISABLE KEYS */;
+INSERT INTO `usuarioadmin` (`id`, `firstname`, `lastname`, `email`, `password`, `url_img`, `is_active`, `id_rol`, `gender`, `fechanac`) VALUES
+	(1, 'No especificado', 'No especificado', 'admin@mail.com', '123456', 'static/img/usernotfound.png', '1', 2, 'H', '2022-01-17');
+/*!40000 ALTER TABLE `usuarioadmin` ENABLE KEYS */;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.ConsultarConversaciones
 DELIMITER //
@@ -294,6 +342,25 @@ BEGIN
                                     (SELECT COUNT(*) FROM reluserfollowuser WHERE iduserquesigue=idperfilconsultado AND isactive='1') AS Acuantossigue, 
                                     if(exists(SELECT iduserseguido FROM reluserfollowuser WHERE iduserquesigue=idusuarioueconsulta AND iduserseguido=idperfilconsultado AND isactive='1'),1,0) 
                             FROM usuario WHERE id=idperfilconsultado and is_active='1';
+END//
+DELIMITER ;
+
+-- Volcando estructura para procedimiento bddpinterestchafon.ConsultarPublicacionesAP
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultarPublicacionesAP`(
+	IN `optionconsul` INT
+)
+    COMMENT 'Consultar las publicaciones para el panel de administrador'
+BEGIN
+if optionconsul=1
+then
+	SET @numero=0;
+	SELECT p.*, u.*, 'Usuario Normal', @numero:=@numero+1 from publicacion as p inner join usuario as u on p.id_usuario=u.id where p.id_status=1 or p.id_status=3;
+elseif optionconsul=2
+then
+SET @numero=0;
+	SELECT p.*, u.*, 'Usuario Normal', @numero:=@numero+1 from publicacion as p inner join usuario as u on p.id_usuario=u.id where p.id_status=4;
+end if;
 END//
 DELIMITER ;
 
@@ -423,6 +490,49 @@ end if;
 END//
 DELIMITER ;
 
+-- Volcando estructura para procedimiento bddpinterestchafon.ConsultarUsuariosAP
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultarUsuariosAP`(
+	IN `optionconsul` INT
+
+
+
+,
+	IN `idusuarioconsul` INT
+)
+    COMMENT 'Consulta todos los usuarios en el sistema para el panel de administrador'
+BEGIN
+	if optionconsul=1
+	then
+		SET @numero=0;
+		select u.*, 
+					(select count(*) from publicacion as p where p.id_usuario=u.id and (p.id_status=1 or p.id_status=3)) as publicaciones, 
+					(select count(*) from reluserfollowuser as rufu where rufu.iduserseguido=u.id) as seguidores,
+					(select count(*) from reluserfollowuser as rufu where rufu.iduserquesigue=u.id) as seguidos,
+					@numero:=@numero+1
+		from usuario as u where u.is_active='1';
+	elseif optionconsul=2
+	then
+		SET @numero=0;
+		select u.*, 
+					(select count(*) from publicacion as p where p.id_usuario=u.id and (p.id_status=1 or p.id_status=3)) as publicaciones, 
+					(select count(*) from reluserfollowuser as rufu where rufu.iduserseguido=u.id) as seguidores,
+					(select count(*) from reluserfollowuser as rufu where rufu.iduserquesigue=u.id) as seguidos,
+					@numero:=@numero+1
+		from usuario as u where u.is_active='3';
+	elseif optionconsul=3
+	then
+		SET @numero=0;
+		select u.*, 
+					(select count(*) from publicacion as p where p.id_usuario=u.id and (p.id_status=1 or p.id_status=3)) as publicaciones, 
+					(select count(*) from reluserfollowuser as rufu where rufu.iduserseguido=u.id) as seguidores,
+					(select count(*) from reluserfollowuser as rufu where rufu.iduserquesigue=u.id) as seguidos,
+					@numero:=@numero+1
+		from usuario as u where u.id=idusuarioconsul; 
+	end if;
+END//
+DELIMITER ;
+
 -- Volcando estructura para procedimiento bddpinterestchafon.CREATEconversacion
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `CREATEconversacion`(
@@ -471,6 +581,77 @@ BEGIN
 		VALUES(iduserplayer,dificult,hardpor,tiempojuego);
 	end if;
 	
+END//
+DELIMITER ;
+
+-- Volcando estructura para procedimiento bddpinterestchafon.EstadisticasIndexAdmin
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `EstadisticasIndexAdmin`()
+    COMMENT 'Estadisticas y conteos que aparecen en el index del panel de administrador'
+BEGIN
+	SELECT count(*) FROM publicacion as p where p.id_status=1 or p.id_status=3
+	union all
+	select count(*) from usuario as u where u.is_active='1'
+	union all
+	SELECT count(*) FROM publicacion as p 
+	WHERE (p.pub_date BETWEEN DATE_SUB(NOW(),INTERVAL 1 WEEK) AND  NOW())AND( p.id_status=1 or p.id_status=3);
+END//
+DELIMITER ;
+
+-- Volcando estructura para procedimiento bddpinterestchafon.EstNumUsersGenYNumPubsGen
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `EstNumUsersGenYNumPubsGen`(
+	IN `optionconsul` INT
+
+)
+    COMMENT 'Obtener dependiendo de la opcion el numero de publicaciones publicadas por cada genero, asi como el numero de usuarios de cada genero'
+BEGIN
+if optionconsul=1
+then
+SELECT u.gender,COUNT(*),(select @totalusers:=count(*) from usuario where is_active='1')FROM usuario AS u WHERE u.is_active='1'
+GROUP BY u.gender;
+elseif optionconsul=2
+then
+SELECT COUNT(*),(select @totalusers:=count(*) from publicacion as p where p.id_status=1 or p.id_status=3) FROM publicacion AS p INNER JOIN usuario AS u ON p.id_usuario=u.id WHERE u.gender LIKE 'H' and (p.id_status=1 or p.id_status=3)
+UNION ALL
+SELECT COUNT(*),(select @totalusers:=count(*) from publicacion as p where p.id_status=1 or p.id_status=3) FROM publicacion AS p INNER JOIN usuario AS u ON p.id_usuario=u.id WHERE u.gender LIKE 'M' and (p.id_status=1 or p.id_status=3)
+UNION ALL 
+SELECT COUNT(*),(select @totalusers:=count(*) from publicacion as p where p.id_status=1 or p.id_status=3) FROM publicacion AS p INNER JOIN usuario AS u ON p.id_usuario=u.id WHERE u.gender LIKE 'O' and (p.id_status=1 or p.id_status=3);
+end if;
+
+
+
+END//
+DELIMITER ;
+
+-- Volcando estructura para procedimiento bddpinterestchafon.EtadGraficaIndexAP
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `EtadGraficaIndexAP`()
+    COMMENT 'Estadisticas para la grafica de barras del index del panel de administrador'
+BEGIN
+	select count(*) from publicacion as p where month(pub_date)=1 and year(pub_date)=year(current_date)
+	union all
+	select count(*) from publicacion as p where month(pub_date)=2 and year(pub_date)=year(current_date)
+	union all
+	select count(*) from publicacion as p where month(pub_date)=3 and year(pub_date)=year(current_date)
+	union all
+	select count(*) from publicacion as p where month(pub_date)=4 and year(pub_date)=year(current_date)
+	union all
+	select count(*) from publicacion as p where month(pub_date)=5 and year(pub_date)=year(current_date)
+	union all 
+	select count(*) from publicacion as p where month(pub_date)=6 and year(pub_date)=year(current_date)
+	union all 
+	select count(*) from publicacion as p where month(pub_date)=7 and year(pub_date)=year(current_date)
+	union all
+	select count(*) from publicacion as p where month(pub_date)=8 and year(pub_date)=year(current_date)
+	union all 
+	select count(*) from publicacion as p where month(pub_date)=9 and year(pub_date)=year(current_date)
+	union all
+	select count(*) from publicacion as p where month(pub_date)=10 and year(pub_date)=year(current_date)
+	union all
+	select count(*) from publicacion as p where month(pub_date)=11 and year(pub_date)=year(current_date)
+	union all 
+	select count(*) from publicacion as p where month(pub_date)=12 and year(pub_date)=year(current_date);
 END//
 DELIMITER ;
 
@@ -579,6 +760,24 @@ BEGIN
 END//
 DELIMITER ;
 
+-- Volcando estructura para procedimiento bddpinterestchafon.ObtenerUsuariosAP
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerUsuariosAP`(
+	IN `optionconsul` INT
+
+)
+    COMMENT 'Obtener todos los usuarios para el panel de administrador'
+BEGIN
+if optionconsul=1
+then
+select u.*, (select count(*) from publicacion as p where p.id_usuario=u.id) as 'Conteo de publicaciones' from usuario as u where u.is_active='1'; 
+elseif optionconsul=2
+then
+select u.*, (select count(*) from publicacion as p where p.id_usuario=u.id) as 'Conteo de publicaciones' from usuario as u  where u.is_active='0';
+end if;
+END//
+DELIMITER ;
+
 -- Volcando estructura para procedimiento bddpinterestchafon.PrivatePubs
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `PrivatePubs`(
@@ -614,11 +813,23 @@ DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `seePublication`(
 	IN `idpublic` INT
 
+
+,
+	IN `optionconsul` INT
+
 )
 BEGIN
-SELECT p.*, u.*
+if optionconsul=1
+then
+	SELECT p.*, u.*
     FROM publicacion AS p INNER JOIN usuario AS u ON p.id_usuario=u.id 
     WHERE (id_status=1 OR id_status=3) AND p.id=idpublic;
+elseif optionconsul=2
+then
+SET @numero=0;
+	SELECT p.*, u.*, 'Usuario Normal', @numero:=@numero+1 from publicacion as p inner join usuario as u on p.id_usuario=u.id where p.id_status=4  AND p.id=idpublic;
+end if;
+
 END//
 DELIMITER ;
 
@@ -679,6 +890,21 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `UPDATEstatusPublication`(
 )
 BEGIN
 UPDATE publicacion SET id_status=idstatus WHERE id=idpublic;
+END//
+DELIMITER ;
+
+-- Volcando estructura para procedimiento bddpinterestchafon.UPDATEstatusUserAP
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `UPDATEstatusUserAP`(
+	IN `statususer` VARCHAR(1),
+	IN `idusuarioupd` INT
+)
+    COMMENT 'Cambiar el estado del usuario desde el panel de administrador'
+BEGIN
+	update usuario 
+	set
+		is_active=statususer
+	WHERE id=idusuarioupd;
 END//
 DELIMITER ;
 
