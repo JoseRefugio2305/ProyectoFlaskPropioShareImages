@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `conversacion` (
   KEY `reluserdestino` (`iduserdestino`),
   CONSTRAINT `reluserdestino` FOREIGN KEY (`iduserdestino`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `reluserremitente` FOREIGN KEY (`iduserremitente`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 -- Volcando datos para la tabla bddpinterestchafon.conversacion: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `conversacion` DISABLE KEYS */;
@@ -47,14 +47,10 @@ CREATE TABLE IF NOT EXISTS `publicacion` (
   KEY `RelUsuarioPublica` (`id_usuario`),
   CONSTRAINT `RelUsuarioPublica` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `StatusPublicacion` FOREIGN KEY (`id_status`) REFERENCES `pubstatus` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla bddpinterestchafon.publicacion: ~3 rows (aproximadamente)
+-- Volcando datos para la tabla bddpinterestchafon.publicacion: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `publicacion` DISABLE KEYS */;
-INSERT INTO `publicacion` (`id`, `pub_title`, `pub_des`, `url_archive`, `id_status`, `id_usuario`, `pub_date`) VALUES
-	(1, 'NFT', 'me la robe de una pag de nfts', 'static/img/Publicaciones/1publication/a_17-01-2022_19_59_26_.jpg', 1, 1, '2022-01-17 19:59:26'),
-	(2, 'One Punch Man', 'Publicacion', 'static/img/Publicaciones/1publication/a_18-01-2022_20_33_32_.jpg', 1, 3, '2022-01-18 20:33:32'),
-	(3, 'GIF', 'Primer publicacion realizada', 'static/img/Publicaciones/2publication/a_19-01-2022_21_19_53_.gif', 1, 2, '2022-01-19 21:19:53');
 /*!40000 ALTER TABLE `publicacion` ENABLE KEYS */;
 
 -- Volcando estructura para tabla bddpinterestchafon.pubstatus
@@ -65,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `pubstatus` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla bddpinterestchafon.pubstatus: ~2 rows (aproximadamente)
+-- Volcando datos para la tabla bddpinterestchafon.pubstatus: ~4 rows (aproximadamente)
 /*!40000 ALTER TABLE `pubstatus` DISABLE KEYS */;
 INSERT INTO `pubstatus` (`id`, `type`, `statusdesc`) VALUES
 	(1, 'Aprobada', 'Es un estatus'),
@@ -101,7 +97,7 @@ CREATE TABLE IF NOT EXISTS `relmensajes` (
   KEY `relidremitente` (`idremitente`),
   CONSTRAINT `relidremitente` FOREIGN KEY (`idremitente`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `relmensajeconversacion` FOREIGN KEY (`idconversacion`) REFERENCES `conversacion` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 -- Volcando datos para la tabla bddpinterestchafon.relmensajes: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `relmensajes` DISABLE KEYS */;
@@ -120,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `relusercomment` (
   KEY `usuario` (`iduser`),
   CONSTRAINT `publicacion` FOREIGN KEY (`idpub`) REFERENCES `publicacion` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `usuario` FOREIGN KEY (`iduser`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 -- Volcando datos para la tabla bddpinterestchafon.relusercomment: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `relusercomment` DISABLE KEYS */;
@@ -138,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `reluserfollowuser` (
   CONSTRAINT `FK_usurarioseguido` FOREIGN KEY (`iduserseguido`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla bddpinterestchafon.reluserfollowuser: ~1 rows (aproximadamente)
+-- Volcando datos para la tabla bddpinterestchafon.reluserfollowuser: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `reluserfollowuser` DISABLE KEYS */;
 /*!40000 ALTER TABLE `reluserfollowuser` ENABLE KEYS */;
 
@@ -157,8 +153,6 @@ CREATE TABLE IF NOT EXISTS `reluserreaction` (
 
 -- Volcando datos para la tabla bddpinterestchafon.reluserreaction: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `reluserreaction` DISABLE KEYS */;
-INSERT INTO `reluserreaction` (`idUser`, `idReaction`, `idPub`) VALUES
-	(1, 1, 2);
 /*!40000 ALTER TABLE `reluserreaction` ENABLE KEYS */;
 
 -- Volcando estructura para tabla bddpinterestchafon.userplaybuscaminas
@@ -208,15 +202,12 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   UNIQUE KEY `email` (`email`),
   KEY `UserRol` (`id_rol`),
   CONSTRAINT `UserRol` FOREIGN KEY (`id_rol`) REFERENCES `userroles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla bddpinterestchafon.usuario: ~4 rows (aproximadamente)
+-- Volcando datos para la tabla bddpinterestchafon.usuario: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
 INSERT INTO `usuario` (`id`, `first_name`, `last_name`, `email`, `password`, `url_img`, `is_active`, `id_rol`, `gender`, `fechanac`) VALUES
-	(1, 'Jose', 'Refugio', 'refugio@mail.com', '123456', 'static/img/usernotfound.png', '1', 1, 'H', '2000-05-23'),
-	(2, 'No especificado', 'No especificado', 'mail@mail.com', '123456', 'static/img/usernotfound.png', '1', 1, 'M', '2022-01-18'),
-	(3, 'No especificado', 'No especificado', 'otro@mail.com', '123456', 'static/img/usernotfound.png', '1', 1, 'O', '2022-01-19'),
-	(4, 'No especificado', 'No especificado', 'aaaa@mail.com', '123456', 'static/img/usernotfound.png', '3', 1, 'H', '2022-01-19');
+	(1, 'Nuevo 2', 'Nuevo', 'abcde@mail.com', '123456', 'static/img/usernotfound.png', '1', 1, 'O', '2022-01-30');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 
 -- Volcando estructura para tabla bddpinterestchafon.usuarioadmin
@@ -237,10 +228,10 @@ CREATE TABLE IF NOT EXISTS `usuarioadmin` (
   CONSTRAINT `rol` FOREIGN KEY (`id_rol`) REFERENCES `userroles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla bddpinterestchafon.usuarioadmin: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla bddpinterestchafon.usuarioadmin: ~1 rows (aproximadamente)
 /*!40000 ALTER TABLE `usuarioadmin` DISABLE KEYS */;
 INSERT INTO `usuarioadmin` (`id`, `firstname`, `lastname`, `email`, `password`, `url_img`, `is_active`, `id_rol`, `gender`, `fechanac`) VALUES
-	(1, 'No especificado', 'No especificado', 'admin@mail.com', '123456', 'static/img/usernotfound.png', '1', 2, 'H', '2022-01-17');
+	(1, 'El admin', 'Admin', 'admin@mail.com', '123456', 'static/img/usernotfound.png', '1', 2, 'H', '2022-01-17');
 /*!40000 ALTER TABLE `usuarioadmin` ENABLE KEYS */;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.ConsultarConversaciones

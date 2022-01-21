@@ -189,7 +189,18 @@ ese posible mensaje a messages, with es la forma de declarar una variable cuando
     {% endfor %}
     </div>
 {% else %}
-        <p>sin publicaciones</p>
+        <div class="col-md-12" style="text-align: center;">
+            <img src="/static/img/404notfound.gif" alt="" height="300" style="padding-bottom: 30px;">
+            
+            
+        </div>
+        <div class="col-md-12" style="text-align: center;">
+            {% if is_logged() %}
+            <a href="/crearPublicacion/0" class="btn btn-primary btn-lg">Crea publicaciones para llenar el Inicio <i class="fas fa-plus-circle"></i></a>
+            {% else %}
+            <a class="btn btn-primary btn-lg" href="/SiginSignup/SignUp">Registrate para crear publicaciones y llenar el Inicio</a>
+            {%endif%}
+        </div>
 {% endif %}
 
 <script>
