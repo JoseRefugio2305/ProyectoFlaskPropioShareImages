@@ -59,4 +59,6 @@ SELECT COUNT(*) FROM publicacion AS p INNER JOIN usuario AS u ON p.id_usuario=u.
 UNION ALL
 SELECT COUNT(*) FROM publicacion AS p INNER JOIN usuario AS u ON p.id_usuario=u.id WHERE u.gender LIKE 'M'
 UNION ALL 
-SELECT COUNT(*) FROM publicacion AS p INNER JOIN usuario AS u ON p.id_usuario=u.id WHERE u.gender LIKE 'O'
+SELECT COUNT(*) FROM publicacion AS p INNER JOIN usuario AS u ON p.id_usuario=u.id WHERE u.gender LIKE 'O';
+
+SHOW PROCEDURE STATUS FROM bddpinterestchafon;
