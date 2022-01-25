@@ -1,10 +1,13 @@
 
 from datetime import datetime
+import json
 import os
+import time
 from flask import Flask,render_template, request, redirect, session,url_for, flash, jsonify
 from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
 from flask_socketio import SocketIO, emit, join_room, leave_room, send
+from test_routes import test
 
 app = Flask(__name__)
 
@@ -30,7 +33,7 @@ def home():
     
     if (is_logged()):
         cur = mysql.connection.cursor()
-        cur.execute("""CALL `ConsultarPublicacionesInicioLog`({0})""".format(session["id_user"]))
+        cur.execute("""CALL `ConsultarPublicacionesInicioLog`({0},{1})""".format(session["id_user"],0))
         data = cur.fetchall()
         #cur2 = mysql.connection.cursor()
         #cur2.execute("SELECT p.id FROM publicacion AS p INNER JOIN reluserreaction AS rur ON p.id=rur.idPub WHERE rur.idUser={0}".format(session["id_user"]))
@@ -39,14 +42,78 @@ def home():
         data2=cur2.fetchall()
     else:
         cur = mysql.connection.cursor()
-        cur.execute("""CALL `ConsultarPublicacionesInicioNoLog`()""")
+        cur.execute("""CALL `ConsultarPublicacionesInicioNoLog`({0})""".format(0))
         data = cur.fetchall()
 
         cur2=mysql.connection.cursor()
         cur2.execute("""CALL `PublicacionesRelevantes`()""")
         data2=cur2.fetchall()
-
+    
     return render_template('index.html', publications = data, relevantes=data2)
+
+#Ruta json para traer otra tanda de publicaciones cuando se llegue al final
+@app.route('/getMorePublics/<string:optcont>')
+def getMorePublics(optcont):
+    
+    contador=int(optcont.split('.')[1])
+    optionpage=int(optcont.split('.')[0])
+    cur = mysql.connection.cursor()
+    print(optcont)
+    if(optionpage==1):
+        if(is_logged()):
+            cur.execute("""CALL `ConsultarPublicacionesInicioLog`({0},{1})""".format(session["id_user"],contador))
+            data = cur.fetchall()
+            connecSistem=True
+        else:
+            cur.execute("""CALL `ConsultarPublicacionesInicioNoLog`({0})""".format(contador))
+            data = cur.fetchall()
+            connecSistem=False
+        return jsonify(publications=data, is_connected=connecSistem)
+    elif(optionpage==2):
+        if(is_logged()):
+            if(int(session["id_user"])==int(optcont.split('.')[2])):
+                cur.execute("""CALL `ConsultarPublicacionesDelPerfil`({0},{1})""".format(session["id_user"],contador))
+                data2 = cur.fetchall()
+                connecSistem=True
+            else:
+                cur.execute("""CALL `ConsultarPublicacionesDelPerfil`({0},{1})""".format(int(optcont.split('.')[2]),contador))
+                data2 = cur.fetchall()
+                connecSistem=False
+        else:
+            cur.execute("""CALL `ConsultarPublicacionesDelPerfil`({0},{1})""".format(int(optcont.split('.')[2]),contador))
+            data2 = cur.fetchall()
+            connecSistem=False
+        return jsonify(GroupPubs=data2, is_connected=connecSistem)
+    elif(optionpage==3):
+        if(is_logged()):
+            if(int(session["id_user"])==int(optcont.split('.')[2])):
+                cur.execute("CALL `PrivatePubs`({0},{1})".format(session["id_user"],contador))
+                data2 = cur.fetchall()
+                connecSistem=True
+            else:
+                data2=[]
+                connecSistem=False
+        else:
+            data2=[]
+            connecSistem=False
+        return jsonify(GroupPubs=data2, is_connected=connecSistem)
+    elif(optionpage==4):
+        if(is_logged()):
+            if(int(session["id_user"])==int(optcont.split('.')[2])):
+                cur.execute("""CALL `ConsultarLikesDelUsuario`({0},{1})""".format(session["id_user"], contador))
+                data2 = cur.fetchall()
+                connecSistem=True
+            else:
+                cur.execute("""CALL `ConsultarLikesDelUsuario`({0},{1})""".format(session["id_user"],contador))
+                data2 = cur.fetchall()
+                connecSistem=True
+        else:
+            cur.execute("""CALL `ConsultarLikesDelUsuario`({0},{1})""".format(session["id_user"],contador))
+            data2 = cur.fetchall()
+            connecSistem=False
+        return jsonify(GroupPubs=data2, is_connected=connecSistem)
+    else:
+        return jsonify(GroupPubs=[], is_connected=False)
 
 #Con esta se reenderiza la plnatilla de inicio de sesion y registro
 @app.route('/SiginSignup/<string:option>')
@@ -145,13 +212,13 @@ def UserProfile(idprofile):
             cur.execute("CALL `ConsultarDatosUsuario`({0})".format(session["id_user"]))
             data = cur.fetchall()[0]
             cur2 = mysql.connection.cursor()
-            cur2.execute("""CALL `ConsultarPublicacionesDelPerfil`({0})""".format(session["id_user"]))
+            cur2.execute("""CALL `ConsultarPublicacionesDelPerfil`({0},{1})""".format(session["id_user"],0))
             data2 = cur2.fetchall()
             cur3 = mysql.connection.cursor()
-            cur3.execute("""CALL `ConsultarLikesDelUsuario`({0})""".format(session["id_user"]))
+            cur3.execute("""CALL `ConsultarLikesDelUsuario`({0},{1})""".format(session["id_user"],0))
             data3 = cur3.fetchall()
             cur4 = mysql.connection.cursor()
-            cur4.execute("CALL `PrivatePubs`({0})".format(session["id_user"]))
+            cur4.execute("CALL `PrivatePubs`({0},{1})".format(session["id_user"],0))
             data4=cur4.fetchall()
         else:
             cur = mysql.connection.cursor()
@@ -161,10 +228,10 @@ def UserProfile(idprofile):
                 data=data[0]
                 
             cur2 = mysql.connection.cursor()
-            cur2.execute("""CALL `ConsultarPublicacionesDelPerfil`({0})""".format(idprofile))
+            cur2.execute("""CALL `ConsultarPublicacionesDelPerfil`({0},{1})""".format(idprofile,0))
             data2 = cur2.fetchall()
             cur3 = mysql.connection.cursor()
-            cur3.execute("""CALL `ConsultarLikesDelUsuario`({0})""".format(idprofile))
+            cur3.execute("""CALL `ConsultarLikesDelUsuario`({0},{1})""".format(idprofile,0))
             data3 = cur3.fetchall()
     else:
         cur = mysql.connection.cursor()
@@ -173,10 +240,10 @@ def UserProfile(idprofile):
         if(data):
             data=data[0]
         cur2 = mysql.connection.cursor()
-        cur2.execute("""CALL `ConsultarPublicacionesDelPerfil`({0})""".format(idprofile))
+        cur2.execute("""CALL `ConsultarPublicacionesDelPerfil`({0},{1})""".format(idprofile,0))
         data2 = cur2.fetchall()
         cur3 = mysql.connection.cursor()
-        cur3.execute("""CALL `ConsultarLikesDelUsuario`({0})""".format(idprofile))
+        cur3.execute("""CALL `ConsultarLikesDelUsuario`({0},{1})""".format(idprofile,0))
         data3 = cur3.fetchall()
     return render_template('userprofile.html', userdata=data, userpubs = data2, userlikes = data3, userprivates = data4)
 
@@ -195,10 +262,13 @@ def LogOut():
 
 @app.route("/editProfile")
 def editProfile():
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM usuario WHERE email='{0}'".format(session['email']))
-    data = cur.fetchall()[0]
-    return render_template("editprofile.html", userdata=data)
+    if(is_logged()):
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM usuario WHERE email='{0}'".format(session['email']))
+        data = cur.fetchall()[0]
+        return render_template("editprofile.html", userdata=data)
+    else:
+        return redirect(url_for('home'))
 
 @app.route("/updateUser", methods=["POST"])
 def updateUser():
@@ -206,6 +276,7 @@ def updateUser():
     messagetype=""
     ruta_bdd=""
     if request.method == 'POST':
+        #time.sleep(10)
         emailedit = request.form["emailedit"]
         cur = mysql.connection.cursor()
         ##Esta es para obterner los registros donde se encuentre el mismo email, pero no el mismo id del usuario
@@ -409,6 +480,7 @@ def addPublication():
 def editPublication():
     data=[0]
     if(request.method=="POST"):
+        
         ruta_bdd=''
         idpubedit=request.form["idpublicationedit"]
         tituloedit=request.form['tittle']
@@ -783,6 +855,8 @@ app.jinja_env.globals.update(is_logged=is_logged)
 #app.jinja_env.globals.update(=)
 #app.jinja_env.globals.update(CloseSession=CloseSession)
 
+app.register_blueprint(test)
+#app.register_blueprint(SignInSignUpBP)
 
 ##Evalua que el archivo que se esta ejecutando sea el main y no un modulo
 if __name__=='__main__':

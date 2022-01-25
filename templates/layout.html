@@ -4,9 +4,19 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@TuUsuarioDeTwitter">
+    <meta name="twitter:creator" content="@TuUsuarioDeTwitter">
+    <meta property="og:title" content="Share Images">
+    <meta property="og:description" content="Esta es una publicacion">
+    <meta property="og:image" content="/static/img/logopagina.png">
+    <meta property="og:url" content="http://joserefugio2305.pythonanywhere.com/publication/9">
+    <meta property="og:type" content="website">
+
     <title>Share Images</title>
 
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/icon.png')}}"/>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logopagina.png')}}"/>
     <link rel="stylesheet" href="{{ url_for('static', filename = 'css/style.css')}}">
 
     <!--CSS BOOTSTRAP 4.6-->
@@ -28,7 +38,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <a class="navbar-brand" href="/">
-            <img src="{{ url_for('static', filename='img/icon.png')}}" width="60" height="60" alt="logo de la pagina">
+            <img src="{{ url_for('static', filename='img/logopagina.png')}}" width="60" height="60" alt="logo de la pagina">
             Share Images
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
