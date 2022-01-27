@@ -1,5 +1,8 @@
 {% extends 'layout.html'%}
 {%block content%}
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <!--Campo de inicio de session-->
 <div class="" style="text-align: center;">
     <img class="" src="/static/img/icon.png" alt="" width="90" height="90">
@@ -43,7 +46,7 @@
 {% endif %}
     <div class="card card-body">
         <h3 >Registrate</h3>
-        <form action="/addUser" method="POST">
+        <form action="/addUser" method="POST" id="formregistrouser">
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -75,15 +78,15 @@
                     </div>
                     <div class="form-group">
                         <p>Ingresa Tu Fecha de Nacimiento</p>
-                        <input class="form-control" required type="date" name="date" placeholder="Fecha de Nacimiento">
+                        <input class="form-control" required type="date" name="date" id="inputfechanac" placeholder="Fecha de Nacimiento">
                     </div>
                 </div>
             </div>
             
             <div class="form-group col-md-12">
-                <button class="btn btn-success col-md-5" type="submit" style="font-weight: bold;">
+                <a class="btn btn-success col-md-5" onclick="SubmitRegistro()" style="font-weight: bold;">
                     Registrarse
-                </button>
+                </a>
                 <button type="button" class="btn btn-secondary col-md-5 offset-md-1" data-dismiss="modal" style="font-weight: bold;">Cancelar</button>
             </div>
         </form>
@@ -107,6 +110,45 @@
         else{
             document.getElementById('divlogin').style.display='none';
             document.getElementById('divregister').style.display='';
+        }
+    }
+
+    function SubmitRegistro()
+    {
+        var fecha = new Date(document.getElementById("inputfechanac").value);
+        var today = new Date();
+        var edadyears = today.getFullYear()-fecha.getFullYear();
+        var edadmonths=today.getMonth()-fecha.getMonth();
+
+        if(edadyears >= 18)
+        {
+            if(edadyears==18)
+            {
+                if(edadmonths>=0)
+                {
+                    document.getElementById("formregistrouser").submit();
+                }
+                else
+                {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Advertencia',
+                        text: 'Tienes que tener mas de 18 para poder ingresar a la pagina.',
+                    });
+                }
+            }
+            else
+            {
+                document.getElementById("formregistrouser").submit();
+            }
+        }
+        else
+        {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Advertencia',
+                text: 'Tienes que tener mas de 18 para poder ingresar a la pagina.',
+            });
         }
     }
 </script>

@@ -1,4 +1,4 @@
-
+import base64
 from datetime import datetime
 import json
 import os
@@ -286,17 +286,6 @@ def updateUser():
             message="El correo que se ingreso ya esta siendo usado por otro usuario"
             messagetype="error"
         else:
-            #Se obtiene y guarda la imagen
-            imgedit = request.files["imgprofileinput"]
-            if (imgedit):
-                img_name_new = secure_filename( 'a'+'_'+datetime.now().strftime('%d-%m-%Y %H_%M_%S')+'_.' + imgedit.filename.split('.')[-1])
-                ruta_imagen = os.path.abspath('static/img/'+str(session['id_user'])+'profile'+'/{0}'.format(img_name_new))
-                ruta_bdd = 'static/img/'+str(session['id_user'])+'profile'+'/{0}'.format(img_name_new)
-                os.makedirs('static/img/'+str(session['id_user'])+'profile', exist_ok=True)
-                imgedit.save(ruta_imagen)
-            else:
-                ruta_bdd=str(session['imgprofile'])
-            
             #se obtienen los demas datos
             firstnedit=request.form["firstnameedit"]
             lastnedit=request.form["lastnameedit"]
@@ -305,8 +294,8 @@ def updateUser():
             dateedit=request.form["dateedit"]
 
             cur2 = mysql.connection.cursor()
-            cur2.execute("""CALL `UPDATEuser`('{0}', '{1}','{2}','{3}','{4}','{5}','{6}',{7})
-            """.format(firstnedit, lastnedit, emailedit, passedit, ruta_bdd, genderedit, dateedit, session['id_user']))
+            cur2.execute("""CALL `UPDATEuser`('{0}', '{1}','{2}','{3}','{4}','{5}',{6})
+            """.format(firstnedit, lastnedit, emailedit, passedit, genderedit, dateedit, session['id_user']))
             mysql.connection.commit()
             message="Datos Actualizados Con Exito!"
             messagetype="success"
@@ -314,11 +303,29 @@ def updateUser():
             session['email'] = emailedit
             session['password'] = passedit
             session['name'] = firstnedit
-            session['imgprofile'] = ruta_bdd    
-
-
         flash(message, messagetype)
         return redirect(url_for("UserProfile", idprofile=int(session['id_user'])))
+    
+@app.route('/updateImgUserProfile', methods=["POST"])
+def updateImgUserProfile():
+    if request.method == 'POST':
+        respuesta = request.get_json()
+        imagennodecod = respuesta["image"]
+        base64_img_bytes = imagennodecod.split(';base64,')[1].encode('utf-8')
+        img_name_new = 'a'+'_'+datetime.now().strftime('%d-%m-%Y %H_%M_%S')+'_.jpg'
+        ruta_imagen = 'static/img/'+str(session['id_user'])+'profile'+'/{0}'.format(img_name_new)
+        ruta_bdd = 'static/img/'+str(session['id_user'])+'profile'+'/{0}'.format(img_name_new)
+        os.makedirs('static/img/'+str(session['id_user'])+'profile', exist_ok=True)
+        with open(ruta_imagen, 'wb') as file_to_save:
+            imagen = base64.decodebytes(base64_img_bytes)
+            file_to_save.write(imagen)
+        cur1 = mysql.connection.cursor()
+        cur1.execute("""CALL `UPDATEimgUserProfile`('{0}',{1})""".format(ruta_bdd, session['id_user']))
+        mysql.connection.commit()
+        session['imgprofile'] = ruta_imagen
+        return jsonify(message="La imagen se recibio", file=ruta_imagen)
+    else:
+        return redirect(url_for('editProfile'))
 
 #Cada que se use este tipo de rutas en flask, en el html antes de cada ruta de algun archivo agregar una /
 #si no se agrega ocurre un error en el que al principio de la ruta se agrega el nombre de la ruta flask que
@@ -770,6 +777,23 @@ def changeStatusUser(iduseroption):
         return redirect(url_for('home'))
 
 
+@app.route('/testimg')
+def testimg():
+    return render_template('testrecortarimg.html')
+
+@app.route('/getimg', methods=["POST"])
+def gettimg():
+    if('image' in request.files):
+        print('hay un archivo')
+    respuesta = request.get_json()
+    imagennodecod = respuesta["image"]
+    base64_img_bytes = imagennodecod.split(';base64,')[1].encode('utf-8')
+    
+    with open('static/img/decoded_image.png', 'wb') as file_to_save:
+        imagen = base64.decodebytes(base64_img_bytes)
+        file_to_save.write(imagen)
+    return jsonify(message="La imagen se recibio", file='gfg')
+
 #rutas de juego
 @app.route('/juegos')
 def ShowGames():
@@ -796,6 +820,8 @@ def ShowGames():
         elif(str(puntaje[5])=='Legendario Dificil'):
             datalegdif.append(puntaje)
     return render_template('juegos.html',facil=datafacil, normal=datanormal, dificil=datadificil, legfacil=datalegfacil, legnormal=datalegnormal,legdificil=datalegdif)
+
+
 @app.route('/juegofractales/')
 def juegoFractal():
     return render_template('fractales.html')

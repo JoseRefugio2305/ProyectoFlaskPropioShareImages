@@ -47,9 +47,9 @@ CREATE TABLE IF NOT EXISTS `publicacion` (
   KEY `RelUsuarioPublica` (`id_usuario`),
   CONSTRAINT `RelUsuarioPublica` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `StatusPublicacion` FOREIGN KEY (`id_status`) REFERENCES `pubstatus` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=104 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla bddpinterestchafon.publicacion: ~103 rows (aproximadamente)
+-- Volcando datos para la tabla bddpinterestchafon.publicacion: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `publicacion` DISABLE KEYS */;
 /*!40000 ALTER TABLE `publicacion` ENABLE KEYS */;
 
@@ -151,7 +151,7 @@ CREATE TABLE IF NOT EXISTS `reluserreaction` (
   CONSTRAINT `usario` FOREIGN KEY (`idUser`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla bddpinterestchafon.reluserreaction: ~3 rows (aproximadamente)
+-- Volcando datos para la tabla bddpinterestchafon.reluserreaction: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `reluserreaction` DISABLE KEYS */;
 /*!40000 ALTER TABLE `reluserreaction` ENABLE KEYS */;
 
@@ -204,7 +204,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   CONSTRAINT `UserRol` FOREIGN KEY (`id_rol`) REFERENCES `userroles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla bddpinterestchafon.usuario: ~1 rows (aproximadamente)
+-- Volcando datos para la tabla bddpinterestchafon.usuario: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 
@@ -862,6 +862,21 @@ BEGIN
 END$$
 DELIMITER ;
 
+-- Volcando estructura para procedimiento bddpinterestchafon.UPDATEimgUserProfile
+DELIMITER $$
+CREATE PROCEDURE `UPDATEimgUserProfile`(
+	IN `ruta_img` VARCHAR(250),
+	IN `iddelusuario` INT
+)
+    COMMENT 'actualizar solo la foto del usuario'
+BEGIN
+update usuario
+set url_img=ruta_img
+where id=iddelusuario;
+
+END$$
+DELIMITER ;
+
 -- Volcando estructura para procedimiento bddpinterestchafon.UPDATEpublication
 DELIMITER $$
 CREATE PROCEDURE `UPDATEpublication`(
@@ -931,10 +946,10 @@ CREATE PROCEDURE `UPDATEuser`(
 	IN `newemail` VARCHAR(200)
 ,
 	IN `pass` VARCHAR(16),
-	IN `urlim` VARCHAR(250),
 	IN `newgender` VARCHAR(3),
 	IN `newfechanac` DATE,
 	IN `iduseredit` INT
+
 
 )
 BEGIN
@@ -943,7 +958,6 @@ BEGIN
     last_name=lastname,
     email=newemail,
     password=pass,
-    url_img=urlim,
     gender=newgender,
     fechanac=newfechanac
     WHERE id=iduseredit;
