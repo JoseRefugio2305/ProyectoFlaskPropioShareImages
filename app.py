@@ -5,6 +5,7 @@ import os
 import time
 from flask import Flask,render_template, request, redirect, session,url_for, flash, jsonify
 from flask_mysqldb import MySQL
+import werkzeug
 from werkzeug.utils import secure_filename
 from flask_socketio import SocketIO, emit, join_room, leave_room, send
 from test_routes import test
@@ -203,7 +204,7 @@ def loginUser():
 
 
 
-@app.route('/UserProfile/<idprofile>')
+@app.route('/UserProfile/<int:idprofile>')
 def UserProfile(idprofile):
     data4=[0]
     if(is_logged()):
@@ -330,7 +331,7 @@ def updateImgUserProfile():
 #Cada que se use este tipo de rutas en flask, en el html antes de cada ruta de algun archivo agregar una /
 #si no se agrega ocurre un error en el que al principio de la ruta se agrega el nombre de la ruta flask que
 #se esta usando, por lo que las imagenes no se muestran
-@app.route("/publication/<pub>")
+@app.route("/publication/<int:pub>")
 def seePublication(pub):
     #obtenemos los datos solo de la publicacion
     cur=mysql.connection.cursor()
@@ -883,6 +884,16 @@ app.jinja_env.globals.update(is_logged=is_logged)
 
 app.register_blueprint(test)
 #app.register_blueprint(SignInSignUpBP)
+
+##Manejo de errores
+@app.errorhandler(werkzeug.exceptions.BadRequest)
+def handle_bad_request(e):
+    return 'bad request!', 404
+
+# or, without the decorator
+app.register_error_handler(400, handle_bad_request)
+
+
 
 ##Evalua que el archivo que se esta ejecutando sea el main y no un modulo
 if __name__=='__main__':

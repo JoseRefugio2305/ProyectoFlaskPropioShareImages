@@ -177,7 +177,7 @@ stroke="#000"
                     <div class="row">
                         <div class="col-md-8">
                             <!-- en este img se visualizará todo el archivo seleccionado-->
-                            <img id="img-original" class="img-fluid">
+                            <img id="img-original"class="img-fluid">
                         </div>
                         <div class="col-md-4">
                             <!-- en este div se mostrará la zona seleccionada, lo que quedará despues de hacer click en el boton crop-->
@@ -194,6 +194,11 @@ stroke="#000"
     </div>
 </div>
 <style>
+#img-original {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+}
     .preview {
     overflow: hidden;
     width: 160px;
@@ -427,9 +432,17 @@ stroke="#000"
     const $btncrop = document.getElementById("btn-crop")
     //configuramos el click del boton crop
     $btncrop.addEventListener("click", function (){
-        //obtenemos la zona seleccionada
-        const canvas = cropper.getCroppedCanvas()
-
+        //obtenemos la zona seleccionada, ademas de eso tambien le enviamos algunas configuraciones
+        //en las que bajamos la calidad de la imagen obtenida a solo 512 x 512 con un maximo de 1024
+        //x1024, esto para reducir el peso de las imagenes, ya que antes de aplicar estas configuraciones
+        //nos daba imagenes de varios megas de peso, y de mucha resolucion, lo cual no es necesario 
+        //para una imagen de perfil que estara pequena
+        const canvas = cropper.getCroppedCanvas({imageSmoothingQuality:'low',
+                                                imageSmoothingEnabled: false,
+                                                width: 512,
+                                                height: 512,
+                                                maxWidth: 1024,
+                                                maxHeight: 1024})
         canvas.toBlob(function (blob){
             //el objeto blob (binary larege object) tiene las propiedades: size y type
             const reader = new FileReader()
