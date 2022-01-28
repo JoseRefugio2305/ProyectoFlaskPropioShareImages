@@ -206,7 +206,7 @@ def loginUser():
 
 @app.route('/UserProfile/<int:idprofile>')
 def UserProfile(idprofile):
-    data4=[0]
+    data4=None
     if(is_logged()):
         if(str(session["id_user"])==idprofile):
             cur = mysql.connection.cursor()
@@ -323,8 +323,8 @@ def updateImgUserProfile():
         cur1 = mysql.connection.cursor()
         cur1.execute("""CALL `UPDATEimgUserProfile`('{0}',{1})""".format(ruta_bdd, session['id_user']))
         mysql.connection.commit()
-        session['imgprofile'] = ruta_imagen
-        return jsonify(message="La imagen se recibio", file=ruta_imagen)
+        session['imgprofile'] = ruta_bdd
+        return jsonify(message="La imagen se recibio", file=ruta_bdd)
     else:
         return redirect(url_for('editProfile'))
 
@@ -886,9 +886,9 @@ app.register_blueprint(test)
 #app.register_blueprint(SignInSignUpBP)
 
 ##Manejo de errores
-@app.errorhandler(werkzeug.exceptions.BadRequest)
+@app.errorhandler(404)
 def handle_bad_request(e):
-    return 'bad request!', 404
+    return render_template('error404.html')
 
 # or, without the decorator
 app.register_error_handler(400, handle_bad_request)
