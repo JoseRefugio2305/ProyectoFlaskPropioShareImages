@@ -59,7 +59,7 @@ def getMorePublics(optcont):
     contador=int(optcont.split('.')[1])
     optionpage=int(optcont.split('.')[0])
     cur = mysql.connection.cursor()
-    print(optcont)
+    #print(optcont)
     if(optionpage==1):
         if(is_logged()):
             cur.execute("""CALL `ConsultarPublicacionesInicioLog`({0},{1})""".format(session["id_user"],contador))
@@ -669,7 +669,7 @@ def createConversation(iddestino):
 
 @socketiocon.on('message')
 def handleMessage(msg, idsala, iduseremitente):
-    print("El mensaje enviado es: "+msg+" enviado por el usuario: "+str(iduseremitente)+"en la conversacion "+str(session['id_conversacion']))
+    #print("El mensaje enviado es: "+msg+" enviado por el usuario: "+str(iduseremitente)+"en la conversacion "+str(session['id_conversacion']))
     cur=mysql.connection.cursor()
     cur.execute("CALL `INSERTmessage`('{0}', {1},{2})".format(msg, session["id_conversacion"], session["id_user"]))
     mysql.connection.commit()
@@ -685,18 +685,18 @@ def useriswriting(data):
 def on_join(data):
     room = data["room"]
     
-    print(data["room"])
+    #print(data["room"])
     join_room(room)
 
 @socketiocon.on('leave')
 def leave(room):
     leave_room(room['room'])
-    print(room["room"])
+    #print(room["room"])
 
 @socketiocon.on('disconnect')
 def test_disconnect():
     leave_room(session['id_conversacion'])
-    print('Client disconnected')
+    #print('Client disconnected')
 
 #Administrador
 @app.route('/AdministratorPanel/<iduseradmin>')
@@ -784,8 +784,6 @@ def testimg():
 
 @app.route('/getimg', methods=["POST"])
 def gettimg():
-    if('image' in request.files):
-        print('hay un archivo')
     respuesta = request.get_json()
     imagennodecod = respuesta["image"]
     base64_img_bytes = imagennodecod.split(';base64,')[1].encode('utf-8')
