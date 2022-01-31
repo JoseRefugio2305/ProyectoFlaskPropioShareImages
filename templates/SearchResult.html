@@ -1,0 +1,179 @@
+{% extends 'layout.html' %}
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+<div class="input-group" style="display: none;" id="divsearchphone">
+    <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1" onclick="BTNSearch()"><i class="fas fa-search"></i></span>
+    </div>
+    <input type="search" class="form-control" maxlength="150" placeholder="Buscar" id="txtbusqueda2" aria-label="Buscar" aria-describedby="basic-addon1" list="listasugerencias2">
+    <datalist id="listasugerencias2">
+        <!--Aqui se agregaran las sugerencias-->
+    </datalist>
+</div>
+
+<div class="list-group list-group-horizontal p-3" >          
+    <a class="list-group-item list-group-item-action active" id="btnPublicaciones" onclick="Visible('Publicaciones')" style="text-align: center;">Publicaciones</a>
+    <a class="list-group-item list-group-item-action" id="btnUsuarios" onclick="Visible('Usuarios')" style="text-align: center;">Usuarios</a>
+</div>
+<div id="PublicSearch" style="text-align: center;">
+{% if SearchPub %}
+    <div class="card-columns containerpublics" id="containerpublics">
+    {% for SearchP in SearchPub %}
+            <div class="">
+                <div class="card" >
+                    <a href="/publication/{{SearchP.0}}">
+                        <img src="/{{SearchP.3}}"height="200" width="500" class="card-img-top img-fluid" alt="{{SearchP.1}}">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title" style="text-overflow: ellipsis; overflow: hidden;white-space: nowrap;">{{SearchP.1}}</h5>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <a class="btn col-md-12" href="/publication/{{SearchP.0}}">
+                                <i class="far fa-eye"></i> <b>Ver Publicacion</b>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+    {% endfor %}
+    </div>
+{% else %}
+<p><b>Lo sentimos no hay publicaciones que correspondan con la busqueda realizada</b></p>
+{% endif %}
+</div>
+
+<div id="UsersSearch" style="display: none; text-align: center;">
+{% if SearchUser %}
+<div class="card-columns containerpublics" id="containerusers">
+    {% for SearchU in SearchUser %}
+            <div class="">
+                <div class="card" >
+                    <a href="/UserProfile/{{SearchU.0}}">
+                        <img src="/{{SearchU.5}}"height="200" width="500" class="card-img-top img-fluid" alt="{{SearchU.1}}">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title" style="text-overflow: ellipsis; overflow: hidden;white-space: nowrap;">{{SearchU.1}} {{SearchU.2}}</h5>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <a class="btn col-md-12" href="/UserProfile/{{SearchU.0}}">
+                                <i class="far fa-eye"></i> <b>Ver Usuario</b>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+    {% endfor %}
+</div>
+{% else %}
+    <p><b>Lo sentimos no hay usuarios que correspondan con la busqueda realizada</b></p>
+{% endif %}
+</div>
+
+<div class="menuinferior">
+    <div class="contenedormenu">
+        <a class="btn-menufloat btn-lg" href="/"><i class="fas fa-home"></i></a>
+        <a class="btn-menufloat btn-lg" href="/SearchResult/0.___" style="color: rgb(255, 255, 255); background-color: black; border-radius: 50%;"><i class="fas fa-search"></i></a>
+        <a class="btn-menufloat btn-lg" href="/crearPublicacion/0"><i class="fas fa-plus"></i></a>
+        {% if is_logged() %}
+        <a href="/UserProfile/{{session.id_user}}" class="btn-menufloat btn-lg" >
+            <i class="fas fa-user"></i>
+        </a>
+        {% else %}
+        <a href="/SiginSignup/SIGNIN" class="btn-menufloat btn-lg">
+            <i class="fas fa-user"></i>
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        var div = document.querySelector('.menuinferior');
+        if (window.innerWidth<=997){
+            console.log('no los muestro');
+            
+            // Apply style to div
+            div.setAttribute('style', 'display: flex');
+            document.getElementById('divsearchphone').style.display='';
+        }
+        else{
+            console.log('no los muestro');
+            // Apply style to div
+            div.setAttribute('style', 'display: none');
+            document.getElementById('divsearchphone').style.display='none';
+        }
+    });
+    window.addEventListener('resize', function(){
+        var div = document.querySelector('.menuinferior');
+        if (window.innerWidth<=997){
+            console.log('no los muestro')
+            div.setAttribute('style', 'display: flex');
+            document.getElementById('divsearchphone').style.display='';
+        }
+        else{
+            console.log('no los muestro')
+            div.setAttribute('style', 'display: none');
+            document.getElementById('divsearchphone').style.display='None';
+        }
+    });
+
+    function Visible(option)
+    {
+        if(option=='Publicaciones')
+        {
+            document.getElementById('PublicSearch').style.display='';
+            document.getElementById('UsersSearch').style.display='None';
+            $('#btnPublicaciones').addClass('active');
+            $('#btnUsuarios').removeClass('active');
+        }
+        else if(option=='Usuarios')
+        {
+            document.getElementById('PublicSearch').style.display='None';
+            document.getElementById('UsersSearch').style.display='';
+            $('#btnPublicaciones').removeClass('active');
+            $('#btnUsuarios').addClass('active');
+        }
+    }
+
+    $('#txtbusqueda2').on('keyup', function(){
+            var busqueda=document.getElementById('txtbusqueda2').value;
+            var html='';
+            if(busqueda.length>=3)
+            {
+                $.getJSON('/SearchSuggestions/'+1+'.'+busqueda, function(data){
+                    if(data.suger.length>0)
+                    {
+                        data.suger.forEach(element => {
+                            html+="<option value='"+element[0]+"'>"
+                        });
+                    }
+                    document.getElementById('listasugerencias2').innerHTML=html
+                });
+            }
+        });
+
+        $('#txtbusqueda2').on('keypress', function(event){
+            if(event.key==='Enter')
+            {
+                var busqueda=document.getElementById('txtbusqueda2').value;
+                if(busqueda.length>=3)
+                {
+                    location.href = '/SearchResult/'+2+'.'+busqueda;
+                }
+            }
+        });
+        function BTNSearch()
+        {
+            var busqueda=document.getElementById('txtbusqueda2').value;
+            if(busqueda.length>=3)
+            {
+                location.href = '/SearchResult/'+2+'.'+busqueda;
+            }
+        }
+</script>
+{% endblock %}

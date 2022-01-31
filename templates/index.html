@@ -50,7 +50,7 @@ ese posible mensaje a messages, with es la forma de declarar una variable cuando
 </style>
 
 {% else %}
-<div class="jumbotron p-5">
+<div class="jumbotron p-5" style="border:1px solid rgb(66, 66, 66)">
     <h1 class="display-4">Hola!</h1>
     <p class="lead">¡Este es un Sistema Web donde podrás compartir tus imágenes favoritas!</p>
     <hr class="my-4">
@@ -273,6 +273,23 @@ ese posible mensaje a messages, with es la forma de declarar una variable cuando
     </g>
     </svg>
     <h6>Cargando publicaciones...</h6>
+    </div>
+
+    <div class="menuinferior">
+        <div class="contenedormenu">
+            <a class="btn-menufloat btn-lg" href="/" style="color: rgb(255, 255, 255); background-color: black; border-radius: 50%;"><i class="fas fa-home"></i></a>
+            <a class="btn-menufloat btn-lg" href="/SearchResult/0.___" ><i class="fas fa-search"></i></a>
+            <a class="btn-menufloat btn-lg" href="/crearPublicacion/0"><i class="fas fa-plus"></i></a>
+            {% if is_logged() %}
+            <a href="/UserProfile/{{session.id_user}}" class="btn-menufloat btn-lg" >
+                <i class="fas fa-user"></i>
+            </a>
+            {% else %}
+            <a href="/SiginSignup/SIGNIN" class="btn-menufloat btn-lg">
+                <i class="fas fa-user"></i>
+            </a>
+            {% endif %}
+        </div>
     </div>
 
 <script src="static/js/index.js"></script>

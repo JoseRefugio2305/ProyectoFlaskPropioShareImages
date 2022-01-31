@@ -102,6 +102,22 @@
     </div>
 
     
+    <div class="menuinferior">
+        <div class="contenedormenu">
+            <a class="btn-menufloat btn-lg" href="/"><i class="fas fa-home"></i></a>
+            <a class="btn-menufloat btn-lg" href="/SearchResult/0.___" ><i class="fas fa-search"></i></a>
+            <a class="btn-menufloat btn-lg" href="/crearPublicacion/0"><i class="fas fa-plus"></i></a>
+            {% if is_logged() %}
+            <a href="/UserProfile/{{session.id_user}}" class="btn-menufloat btn-lg" style="color: rgb(255, 255, 255); background-color: black; border-radius: 50%;">
+                <i class="fas fa-user"></i>
+            </a>
+            {% else %}
+            <a href="/SiginSignup/SIGNIN" class="btn-menufloat btn-lg">
+                <i class="fas fa-user"></i>
+            </a>
+            {% endif %}
+        </div>
+    </div>
 
 
 
@@ -109,6 +125,18 @@
     $(document).ready(function(){
         if (window.innerWidth<=430){
             $('#opcioneslistasconv').removeClass('list-group-horizontal');
+        }
+        var div = document.querySelector('.menuinferior');
+        if (window.innerWidth<=997){
+            console.log('no los muestro');
+            
+            // Apply style to div
+            div.setAttribute('style', 'display: flex');
+        }
+        else{
+            console.log('no los muestro');
+            // Apply style to div
+            div.setAttribute('style', 'display: none');
         }
     });
     window.addEventListener('resize', function(){
@@ -119,6 +147,16 @@
             //if(!document.getElementById('opcioneslistasconv').contains('list-group-horizontal')){
                 $('#opcioneslistasconv').addClass('list-group-horizontal');
             //}
+        }
+        
+        var div = document.querySelector('.menuinferior');
+        if (window.innerWidth<=997){
+            console.log('no los muestro')
+            div.setAttribute('style', 'display: flex');
+        }
+        else{
+            console.log('no los muestro')
+            div.setAttribute('style', 'display: none');
         }
     });
 

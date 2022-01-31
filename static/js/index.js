@@ -1,4 +1,29 @@
 //
+$(document).ready(function(){
+    var div = document.querySelector('.menuinferior');
+    if (window.innerWidth<=997){
+        console.log('no los muestro');
+        
+        // Apply style to div
+        div.setAttribute('style', 'display: flex');
+    }
+    else{
+        console.log('no los muestro');
+        // Apply style to div
+        div.setAttribute('style', 'display: none');
+    }
+});
+window.addEventListener('resize', function(){
+    var div = document.querySelector('.menuinferior');
+    if (window.innerWidth<=997){
+        console.log('no los muestro')
+        div.setAttribute('style', 'display: flex');
+    }
+    else{
+        console.log('no los muestro')
+        div.setAttribute('style', 'display: none');
+    }
+});
     
 function LikeCangeIndx(idpub)
 {

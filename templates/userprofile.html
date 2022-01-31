@@ -43,8 +43,7 @@
         <h2>{{userdata.1}} {{userdata.2}}</h2>
         {% if is_logged() and session.id_user==userdata.0%}
         <p>{{userdata.3}}</p>
-        <p>Seguidores {{userdata.10}}  </p>
-        <p>Siguiendo {{userdata.11}}</p>
+        <p><b> {{userdata.10}} Seguidores</b> - Siguiendo a {{userdata.11}}</p>
         
         <a class="btn" id="btneditprofile" href="/editProfile"><i class="fas fa-user-edit"></i> Editar Perfil</a>
         {% else %}
@@ -64,7 +63,6 @@
             <a class="list-group-item list-group-item-action active" id="btnPublicaciones" onclick="Visible('Publicaciones')">Publicaciones</a>
             <a class="list-group-item list-group-item-action" id="btnLikes" onclick="Visible('Likes')">Me gusta</a>
         </div>
-
     </div>
     <div class="PublicationsContent p-4" >
         <div class="col-md-6 offset-md-3" style="text-align: center;" id="typePublication">
@@ -251,6 +249,24 @@
     <h6>Cargando publicaciones...</h6>
 </div>
 
+<div class="menuinferior">
+    <div class="contenedormenu">
+        <a class="btn-menufloat btn-lg" href="/"><i class="fas fa-home"></i></a>
+        <a class="btn-menufloat btn-lg" href="/SearchResult/0.___" ><i class="fas fa-search"></i></a>
+        <a class="btn-menufloat btn-lg" href="/crearPublicacion/0"><i class="fas fa-plus"></i></a>
+        {% if is_logged() %}
+        <a href="/UserProfile/{{session.id_user}}" class="btn-menufloat btn-lg" style="color: rgb(255, 255, 255); background-color: black; border-radius: 50%;">
+            <i class="fas fa-user"></i>
+        </a>
+        {% else %}
+        <a href="/SiginSignup/SIGNIN" class="btn-menufloat btn-lg">
+            <i class="fas fa-user"></i>
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+
 <script>
     //estas variable de conteo funcionan para saber cuantas veces he lleegado al final de la ventana
     var cont=1;//para que solo llame a la ruta json una vez
@@ -260,6 +276,31 @@
     var contprivadas=1;
     var contlikes=1;
 
+    $(document).ready(function(){
+        var div = document.querySelector('.menuinferior');
+        if (window.innerWidth<=997){
+            console.log('no los muestro');
+            
+            // Apply style to div
+            div.setAttribute('style', 'display: flex');
+        }
+        else{
+            console.log('no los muestro');
+            // Apply style to div
+            div.setAttribute('style', 'display: none');
+        }
+    });
+    window.addEventListener('resize', function(){
+        var div = document.querySelector('.menuinferior');
+        if (window.innerWidth<=997){
+            console.log('no los muestro')
+            div.setAttribute('style', 'display: flex');
+        }
+        else{
+            console.log('no los muestro')
+            div.setAttribute('style', 'display: none');
+        }
+    });
 
     function Visible(option){
         if (option=='Publicaciones'){

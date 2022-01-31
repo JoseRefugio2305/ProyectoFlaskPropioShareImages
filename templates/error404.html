@@ -1,5 +1,26 @@
 {% extends 'layout.html'%}
 {% block content %}
+<style>
+    .btnback{
+        background: white;
+        color: black;
+        border-radius: 45%;
+        width: 50px;
+        height: 50px;
+        vertical-align: middle;
+        box-shadow: 5px 5px 5px 3px rgba(0, 0, 0, 0.2);
+    }
+    .btnback:hover{
+        background: black;
+        color: white;
+    }
+</style>
+<div>
+    <a class="btnback btn" href="/">
+        <i class="fas fa-arrow-left" style="padding-top: 50%;"></i>
+    </a>
+</div>
+
 <div class="col-md-12">
     <img src="static/img/error-404-not-found.jpg" alt="">
 </div>
