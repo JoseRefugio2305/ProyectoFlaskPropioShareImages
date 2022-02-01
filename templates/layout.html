@@ -43,7 +43,7 @@
         </a>
 
         
-        <div class="nav-item dropdown ml-auto" id="btnLogOut" style="display: none;">
+        <div class="nav-item dropdown ml-auto" id="btnLogOut">
             {% if is_logged() %}
             <a class="nav-link " href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false" onclick="FocusOptions()">
                 <i class="fas fa-angle-double-down" id="icondropdownoptions"></i>
@@ -156,31 +156,31 @@
     
     
     <script>
-        $(document).ready(function(){
-            if (window.innerWidth<=997){
-                console.log('no los muestro')
-                document.getElementById('navbarNav').style.display='None';
-                document.getElementById('btnNavbarcollapse').style.display='None';
-                document.getElementById('btnLogOut').style.display='';
+        // $(document).ready(function(){
+        //     if (window.innerWidth<=997){
+        //         console.log('no los muestro')
+        //         document.getElementById('navbarNav').style.display='None';
+        //         document.getElementById('btnNavbarcollapse').style.display='None';
+        //         document.getElementById('btnLogOut').style.display='';
                 
-            }
-        });
-        window.addEventListener('resize', function(){
-            if (window.innerWidth<=997){
-                console.log('no los muestro')
-                document.getElementById('navbarNav').style.display='None';
-                document.getElementById('btnNavbarcollapse').style.display='None';
-                document.getElementById('btnLogOut').style.display='';
+        //     }
+        // });
+        // window.addEventListener('resize', function(){
+        //     if (window.innerWidth<=997){
+        //         console.log('no los muestro')
+        //         document.getElementById('navbarNav').style.display='None';
+        //         document.getElementById('btnNavbarcollapse').style.display='None';
+        //         document.getElementById('btnLogOut').style.display='';
                 
-            }
-            else{
-                console.log('no los muestro')
-                document.getElementById('navbarNav').style.display='';
-                document.getElementById('btnNavbarcollapse').style.display='';
-                document.getElementById('btnLogOut').style.display='None';
+        //     }
+        //     else{
+        //         console.log('no los muestro')
+        //         document.getElementById('navbarNav').style.display='';
+        //         document.getElementById('btnNavbarcollapse').style.display='';
+        //         document.getElementById('btnLogOut').style.display='None';
                 
-            }
-        });
+        //     }
+        // });
 
 
         function FocusOptions(){

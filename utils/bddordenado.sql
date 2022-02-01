@@ -1,20 +1,5 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Versión del servidor:         5.7.24 - MySQL Community Server (GPL)
--- SO del servidor:              Win64
--- HeidiSQL Versión:             10.2.0.5599
--- --------------------------------------------------------
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET NAMES utf8 */;
-/*!50503 SET NAMES utf8mb4 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-
-
--- Volcando estructura de base de datos para bddpinterestchafon
-CREATE DATABASE IF NOT EXISTS `bddpinterestchafon` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `bddpinterestchafon`;
+ALTER DATABASE mi_base_de_datos 
+CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 -- Volcando estructura para tabla bddpinterestchafon.conversacion
 CREATE TABLE IF NOT EXISTS `conversacion` (
@@ -27,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `conversacion` (
   KEY `reluserdestino` (`iduserdestino`),
   CONSTRAINT `reluserdestino` FOREIGN KEY (`iduserdestino`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `reluserremitente` FOREIGN KEY (`iduserremitente`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla bddpinterestchafon.conversacion: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `conversacion` DISABLE KEYS */;
@@ -47,9 +32,9 @@ CREATE TABLE IF NOT EXISTS `publicacion` (
   KEY `RelUsuarioPublica` (`id_usuario`),
   CONSTRAINT `RelUsuarioPublica` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `StatusPublicacion` FOREIGN KEY (`id_status`) REFERENCES `pubstatus` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla bddpinterestchafon.publicacion: ~4 rows (aproximadamente)
+-- Volcando datos para la tabla bddpinterestchafon.publicacion: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `publicacion` DISABLE KEYS */;
 /*!40000 ALTER TABLE `publicacion` ENABLE KEYS */;
 
@@ -59,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `pubstatus` (
   `type` varchar(50) NOT NULL,
   `statusdesc` varchar(50) NOT NULL DEFAULT 'Es un estatus',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla bddpinterestchafon.pubstatus: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `pubstatus` DISABLE KEYS */;
@@ -76,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `reactions` (
   `type` varchar(50) NOT NULL,
   `reactiondesc` varchar(150) NOT NULL DEFAULT 'Es una reaccion',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla bddpinterestchafon.reactions: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `reactions` DISABLE KEYS */;
@@ -97,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `relmensajes` (
   KEY `relidremitente` (`idremitente`),
   CONSTRAINT `relidremitente` FOREIGN KEY (`idremitente`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `relmensajeconversacion` FOREIGN KEY (`idconversacion`) REFERENCES `conversacion` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla bddpinterestchafon.relmensajes: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `relmensajes` DISABLE KEYS */;
@@ -116,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `relusercomment` (
   KEY `usuario` (`iduser`),
   CONSTRAINT `publicacion` FOREIGN KEY (`idpub`) REFERENCES `publicacion` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `usuario` FOREIGN KEY (`iduser`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla bddpinterestchafon.relusercomment: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `relusercomment` DISABLE KEYS */;
@@ -132,7 +117,7 @@ CREATE TABLE IF NOT EXISTS `reluserfollowuser` (
   KEY `FK_usuarioquesigue` (`iduserquesigue`),
   CONSTRAINT `FK_usuarioquesigue` FOREIGN KEY (`iduserquesigue`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_usurarioseguido` FOREIGN KEY (`iduserseguido`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla bddpinterestchafon.reluserfollowuser: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `reluserfollowuser` DISABLE KEYS */;
@@ -149,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `reluserreaction` (
   CONSTRAINT `publicacionreaccionada` FOREIGN KEY (`idPub`) REFERENCES `publicacion` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `reaccion` FOREIGN KEY (`idReaction`) REFERENCES `reactions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `usario` FOREIGN KEY (`idUser`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla bddpinterestchafon.reluserreaction: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `reluserreaction` DISABLE KEYS */;
@@ -164,7 +149,7 @@ CREATE TABLE IF NOT EXISTS `userplaybuscaminas` (
   `fechascore` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   KEY `llaveplayer` (`idplayer`),
   CONSTRAINT `llaveplayer` FOREIGN KEY (`idplayer`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla bddpinterestchafon.userplaybuscaminas: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `userplaybuscaminas` DISABLE KEYS */;
@@ -177,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `userroles` (
   `isActive` varchar(2) NOT NULL DEFAULT '1',
   `description` varchar(50) NOT NULL DEFAULT 'Es un tipo de rol',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla bddpinterestchafon.userroles: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `userroles` DISABLE KEYS */;
@@ -202,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   UNIQUE KEY `email` (`email`),
   KEY `UserRol` (`id_rol`),
   CONSTRAINT `UserRol` FOREIGN KEY (`id_rol`) REFERENCES `userroles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla bddpinterestchafon.usuario: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
@@ -224,7 +209,7 @@ CREATE TABLE IF NOT EXISTS `usuarioadmin` (
   UNIQUE KEY `email` (`email`),
   KEY `rol` (`id_rol`),
   CONSTRAINT `rol` FOREIGN KEY (`id_rol`) REFERENCES `userroles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla bddpinterestchafon.usuarioadmin: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `usuarioadmin` DISABLE KEYS */;
@@ -233,8 +218,8 @@ INSERT INTO `usuarioadmin` (`id`, `firstname`, `lastname`, `email`, `password`, 
 /*!40000 ALTER TABLE `usuarioadmin` ENABLE KEYS */;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.Busqueda
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `Busqueda`(
+DELIMITER $$
+CREATE PROCEDURE `Busqueda`(
 	IN `optsearch` INT,
 	IN `textsearch` VARCHAR(200)
 
@@ -276,12 +261,12 @@ BEGIN
    elseif (optsearch=3) then
    	select * from usuario as u where u.is_active='1' and (u.first_name like concat('%',textsearch,'%') or u.last_name like concat('%',textsearch,'%') or concat(u.first_name, ' ', u.last_name) like concat('%',textsearch,'%'));
 	end if;
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.ConsultarConversaciones
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultarConversaciones`(
+DELIMITER $$
+CREATE PROCEDURE `ConsultarConversaciones`(
 	IN `idusuariocon` INT
 
 
@@ -313,12 +298,12 @@ BEGIN
 	 
 	order by fechaenviomen desc;
 	
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.ConsultarDatosUsuario
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultarDatosUsuario`(
+DELIMITER $$
+CREATE PROCEDURE `ConsultarDatosUsuario`(
 	IN `idusuarioperfil` INT
 
 
@@ -328,12 +313,12 @@ BEGIN
 			(SELECT COUNT(*) FROM reluserfollowuser WHERE iduserseguido=idusuarioperfil AND isactive='1') AS Cuantoslosiguen, 
 			(SELECT COUNT(*) FROM reluserfollowuser WHERE iduserquesigue=idusuarioperfil AND isactive='1') AS Acuantossigue 
 			FROM usuario WHERE id=idusuarioperfil and is_active='1';
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.ConsultarLikesDelUsuario
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultarLikesDelUsuario`(
+DELIMITER $$
+CREATE PROCEDURE `ConsultarLikesDelUsuario`(
 	IN `iduserlikes` INT
 
 
@@ -346,12 +331,12 @@ SELECT p.*, u.* FROM publicacion AS p INNER JOIN reluserreaction AS rup ON rup.i
                         WHERE rup.idUser=iduserlikes AND p.id_status=1 AND rup.idReaction=1 and u.is_active='1'
 								order by pub_date
 									 limit contpubs,20;
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.ConsultarMensajesConversacion
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultarMensajesConversacion`(
+DELIMITER $$
+CREATE PROCEDURE `ConsultarMensajesConversacion`(
 	IN `idconvercon` INT
 
 
@@ -366,12 +351,12 @@ where c.id=idconvercon;
 else 
 select c.* from conversacion as c where c.id=idconvercon;
 end if;
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.ConsultarOtroPerfilLogged
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultarOtroPerfilLogged`(
+DELIMITER $$
+CREATE PROCEDURE `ConsultarOtroPerfilLogged`(
 	IN `idperfilconsultado` INT,
 	IN `idusuarioueconsulta` INT
 
@@ -383,12 +368,12 @@ BEGIN
                                     (SELECT COUNT(*) FROM reluserfollowuser WHERE iduserquesigue=idperfilconsultado AND isactive='1') AS Acuantossigue, 
                                     if(exists(SELECT iduserseguido FROM reluserfollowuser WHERE iduserquesigue=idusuarioueconsulta AND iduserseguido=idperfilconsultado AND isactive='1'),1,0) 
                             FROM usuario WHERE id=idperfilconsultado and is_active='1';
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.ConsultarPublicacionesAP
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultarPublicacionesAP`(
+DELIMITER $$
+CREATE PROCEDURE `ConsultarPublicacionesAP`(
 	IN `optionconsul` INT
 )
     COMMENT 'Consultar las publicaciones para el panel de administrador'
@@ -402,12 +387,12 @@ then
 SET @numero=0;
 	SELECT p.*, u.*, 'Usuario Normal', @numero:=@numero+1 from publicacion as p inner join usuario as u on p.id_usuario=u.id where p.id_status=4;
 end if;
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.ConsultarPublicacionesDelPerfil
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultarPublicacionesDelPerfil`(
+DELIMITER $$
+CREATE PROCEDURE `ConsultarPublicacionesDelPerfil`(
 	IN `idperfiluser` INT
 
 
@@ -434,12 +419,12 @@ BEGIN
                             WHERE pp.id_status=1 AND rurr.idReaction=1)
 									 order by pub_date
 									 limit conteopubs,20;
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.ConsultarPublicacionesInicioLog
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultarPublicacionesInicioLog`(
+DELIMITER $$
+CREATE PROCEDURE `ConsultarPublicacionesInicioLog`(
 	IN `idusuario_proc` INT
 
 
@@ -472,12 +457,12 @@ BEGIN
         ORDER BY pub_date DESC
 		  LIMIT limiteinferior, 20;
 
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.ConsultarPublicacionesInicioNoLog
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultarPublicacionesInicioNoLog`(
+DELIMITER $$
+CREATE PROCEDURE `ConsultarPublicacionesInicioNoLog`(
 	IN `limiteinferior` INT
 )
 BEGIN
@@ -502,21 +487,21 @@ BEGIN
                                             WHERE pp.id_status=1 AND rurr.idReaction=1) and u.is_active='1'      
                 ORDER BY pub_date DESC
                 LIMIT limiteinferior,20;
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.ConsultarPuntajes
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultarPuntajes`()
+DELIMITER $$
+CREATE PROCEDURE `ConsultarPuntajes`()
 BEGIN
 	SELECT u.id, u.first_name, u.last_name, u.url_img, s.* FROM usuario AS u INNER JOIN userplaybuscaminas AS s ON u.id=s.idplayer
 	ORDER BY s.dificultad,s.tiempo ASC;
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.ConsultarSeguidores
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultarSeguidores`(
+DELIMITER $$
+CREATE PROCEDURE `ConsultarSeguidores`(
 	IN `idusercon` INT
 
 ,
@@ -541,12 +526,12 @@ SELECT u.* from usuario as u inner join reluserfollowuser as ufu on u.id=ufu.idu
 u.id not in (select iduserdestino from conversacion where iduserremitente=idusercon) 
 and u.id not in (select iduserremitente from conversacion where iduserdestino=idusercon);
 end if;
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.ConsultarUsuariosAP
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultarUsuariosAP`(
+DELIMITER $$
+CREATE PROCEDURE `ConsultarUsuariosAP`(
 	IN `optionconsul` INT
 
 
@@ -584,12 +569,12 @@ BEGIN
 					@numero:=@numero+1
 		from usuario as u where u.id=idusuarioconsul; 
 	end if;
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.CREATEconversacion
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `CREATEconversacion`(
+DELIMITER $$
+CREATE PROCEDURE `CREATEconversacion`(
 	IN `idremiten` INT,
 	IN `iddest` INT
 
@@ -600,12 +585,12 @@ BEGIN
 	then
 	INSERT INTO conversacion (iduserremitente, iduserdestino) values(idremiten,iddest);
 	end if;
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.CREATEpuntaje
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `CREATEpuntaje`(
+DELIMITER $$
+CREATE PROCEDURE `CREATEpuntaje`(
 	IN `iduserplayer` INT,
 	IN `tiempojuego` INT
 ,
@@ -635,12 +620,12 @@ BEGIN
 		VALUES(iduserplayer,dificult,hardpor,tiempojuego);
 	end if;
 	
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.EstadisticasIndexAdmin
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `EstadisticasIndexAdmin`()
+DELIMITER $$
+CREATE PROCEDURE `EstadisticasIndexAdmin`()
     COMMENT 'Estadisticas y conteos que aparecen en el index del panel de administrador'
 BEGIN
 	SELECT count(*) FROM publicacion as p where p.id_status=1 or p.id_status=3
@@ -649,12 +634,12 @@ BEGIN
 	union all
 	SELECT count(*) FROM publicacion as p 
 	WHERE (p.pub_date BETWEEN DATE_SUB(NOW(),INTERVAL 1 WEEK) AND  NOW())AND( p.id_status=1 or p.id_status=3);
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.EstNumUsersGenYNumPubsGen
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `EstNumUsersGenYNumPubsGen`(
+DELIMITER $$
+CREATE PROCEDURE `EstNumUsersGenYNumPubsGen`(
 	IN `optionconsul` INT
 
 )
@@ -675,12 +660,12 @@ end if;
 
 
 
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.EtadGraficaIndexAP
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `EtadGraficaIndexAP`()
+DELIMITER $$
+CREATE PROCEDURE `EtadGraficaIndexAP`()
     COMMENT 'Estadisticas para la grafica de barras del index del panel de administrador'
 BEGIN
 	select count(*) from publicacion as p where month(pub_date)=1 and year(pub_date)=year(current_date)
@@ -706,36 +691,36 @@ BEGIN
 	select count(*) from publicacion as p where month(pub_date)=11 and year(pub_date)=year(current_date)
 	union all 
 	select count(*) from publicacion as p where month(pub_date)=12 and year(pub_date)=year(current_date);
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.INSERTcomment
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `INSERTcomment`(
+DELIMITER $$
+CREATE PROCEDURE `INSERTcomment`(
 	IN `comentario` VARCHAR(250),
 	IN `idpublic` INT,
 	IN `idusercomment` INT
 )
 BEGIN
 INSERT INTO relusercomment (comment, idpub, iduser) VALUES(comentario, idpublic,idusercomment);
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.INSERTfollow
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `INSERTfollow`(
+DELIMITER $$
+CREATE PROCEDURE `INSERTfollow`(
 	IN `is_active` VARCHAR(2),
 	IN `idseguido` INT,
 	IN `idquesigue` INT
 )
 BEGIN
 INSERT INTO reluserfollowuser (iduserseguido, iduserquesigue, isactive) VALUES (idseguido, idquesigue, is_active);
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.INSERTmessage
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `INSERTmessage`(
+DELIMITER $$
+CREATE PROCEDURE `INSERTmessage`(
 	IN `contmessage` VARCHAR(250),
 	IN `idconvcon` INT,
 	IN `idurem` INT
@@ -746,12 +731,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `INSERTmessage`(
 BEGIN
 	INSERT INTO relmensajes (contenido, idconversacion, idremitente)
 	VALUES (contmessage, idconvcon, idurem);
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.INSERTnuevousuario
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `INSERTnuevousuario`(
+DELIMITER $$
+CREATE PROCEDURE `INSERTnuevousuario`(
 	IN `firstname` VARCHAR(150),
 	IN `lastname` VARCHAR(150),
 	IN `newemail` VARCHAR(200),
@@ -763,12 +748,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `INSERTnuevousuario`(
 )
 BEGIN
 	INSERT INTO usuario (first_name, last_name, email, password, gender, fechanac) VALUES (firstname, lastname, newemail, pass, newgender, newfechanac);
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.INSERTpublication
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `INSERTpublication`(
+DELIMITER $$
+CREATE PROCEDURE `INSERTpublication`(
 	IN `pubtitle` VARCHAR(150),
 	IN `pubdesc` VARCHAR(250),
 	IN `urlarchive` VARCHAR(250),
@@ -780,24 +765,24 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `INSERTpublication`(
 BEGIN
 		  INSERT INTO publicacion (pub_title, pub_des, url_archive, id_status, id_usuario) 
         VALUES(pubtitle, pubdesc, urlarchive, idstatus,iduser);
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.INSERTreaccion
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `INSERTreaccion`(
+DELIMITER $$
+CREATE PROCEDURE `INSERTreaccion`(
 	IN `idusertor` INT,
 	IN `reaccion` INT,
 	IN `idpublic` INT
 )
 BEGIN
 	INSERT INTO reluserreaction (idUser, idReaction, idPub) VALUES (idusertor, reaccion, idpublic);
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.Loggin
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `Loggin`(
+DELIMITER $$
+CREATE PROCEDURE `Loggin`(
 	IN `emaillogin` VARCHAR(250),
 	IN `passwordlogin` VARCHAR(50)
 
@@ -811,12 +796,12 @@ BEGIN
 	else 
 	SELECT * FROM usuario WHERE email=emaillogin AND password=passwordlogin AND is_active='1';
 	end if;
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.ObtenerUsuariosAP
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenerUsuariosAP`(
+DELIMITER $$
+CREATE PROCEDURE `ObtenerUsuariosAP`(
 	IN `optionconsul` INT
 
 )
@@ -829,12 +814,12 @@ elseif optionconsul=2
 then
 select u.*, (select count(*) from publicacion as p where p.id_usuario=u.id) as 'Conteo de publicaciones' from usuario as u  where u.is_active='0';
 end if;
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.PrivatePubs
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `PrivatePubs`(
+DELIMITER $$
+CREATE PROCEDURE `PrivatePubs`(
 	IN `idusuario` INT
 
 ,
@@ -845,21 +830,21 @@ BEGIN
 	SELECT * FROM publicacion WHERE id_status=3 AND id_usuario=idusuario
 	order by pub_date
 	limit contpubs,20;
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.PublicacionesRelevantes
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `PublicacionesRelevantes`()
+DELIMITER $$
+CREATE PROCEDURE `PublicacionesRelevantes`()
 BEGIN
 	SELECT * FROM publicacion inner join usuario as u on publicacion.id_usuario=u.id
 	WHERE (pub_date BETWEEN DATE_SUB(NOW(),INTERVAL 1 WEEK) AND  NOW()) AND id_status=1 and u.is_active='1';
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.PublicationComments
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `PublicationComments`(
+DELIMITER $$
+CREATE PROCEDURE `PublicationComments`(
 	IN `idpublic` INT
 
 
@@ -867,12 +852,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `PublicationComments`(
 BEGIN
 	SELECT rcu.*, u.* FROM relusercomment AS rcu INNER JOIN usuario AS u ON rcu.iduser=u.id WHERE rcu.idpub=idpublic and u.is_active='1'
 	order by rcu.comment_date;
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.seePublication
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `seePublication`(
+DELIMITER $$
+CREATE PROCEDURE `seePublication`(
 	IN `idpublic` INT
 
 
@@ -892,12 +877,12 @@ SET @numero=0;
 	SELECT p.*, u.*, 'Usuario Normal', @numero:=@numero+1 from publicacion as p inner join usuario as u on p.id_usuario=u.id where p.id_status=4  AND p.id=idpublic;
 end if;
 
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.UPDATEfollow
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `UPDATEfollow`(
+DELIMITER $$
+CREATE PROCEDURE `UPDATEfollow`(
 	IN `is_active` VARCHAR(2),
 	IN `idseguido` INT,
 	IN `idquesigue` INT
@@ -906,12 +891,12 @@ BEGIN
 	UPDATE reluserfollowuser 
 	SET isactive=is_active
 	WHERE iduserseguido=idseguido AND iduserquesigue=idquesigue;
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.UPDATEimgUserProfile
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `UPDATEimgUserProfile`(
+DELIMITER $$
+CREATE PROCEDURE `UPDATEimgUserProfile`(
 	IN `ruta_img` VARCHAR(250),
 	IN `iddelusuario` INT
 )
@@ -921,12 +906,12 @@ update usuario
 set url_img=ruta_img
 where id=iddelusuario;
 
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.UPDATEpublication
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `UPDATEpublication`(
+DELIMITER $$
+CREATE PROCEDURE `UPDATEpublication`(
 	IN `pubtitle` VARCHAR(150),
 	IN `pubdesc` VARCHAR(250),
 	IN `urlarchive` VARCHAR(250),
@@ -939,12 +924,12 @@ BEGIN
                             pub_des=pubdesc,
                             url_archive=urlarchive
                         WHERE id=idpublic;
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.UPDATEreaccion
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `UPDATEreaccion`(
+DELIMITER $$
+CREATE PROCEDURE `UPDATEreaccion`(
 	IN `reaccion` INT
 ,
 	IN `idpublic` INT,
@@ -956,23 +941,23 @@ BEGIN
                 SET
                     idReaction=reaccion
                 WHERE idPub =idpublic AND idUser=idusertor;
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.UPDATEstatusPublication
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `UPDATEstatusPublication`(
+DELIMITER $$
+CREATE PROCEDURE `UPDATEstatusPublication`(
 	IN `idstatus` INT,
 	IN `idpublic` INT
 )
 BEGIN
 UPDATE publicacion SET id_status=idstatus WHERE id=idpublic;
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.UPDATEstatusUserAP
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `UPDATEstatusUserAP`(
+DELIMITER $$
+CREATE PROCEDURE `UPDATEstatusUserAP`(
 	IN `statususer` VARCHAR(1),
 	IN `idusuarioupd` INT
 )
@@ -982,12 +967,12 @@ BEGIN
 	set
 		is_active=statususer
 	WHERE id=idusuarioupd;
-END//
+END$$
 DELIMITER ;
 
 -- Volcando estructura para procedimiento bddpinterestchafon.UPDATEuser
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `UPDATEuser`(
+DELIMITER $$
+CREATE PROCEDURE `UPDATEuser`(
 	IN `firstname` VARCHAR(150),
 	IN `lastname` VARCHAR(150),
 	IN `newemail` VARCHAR(200)
@@ -1008,7 +993,7 @@ BEGIN
     gender=newgender,
     fechanac=newfechanac
     WHERE id=iduseredit;
-END//
+END$$
 DELIMITER ;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

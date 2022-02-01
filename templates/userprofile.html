@@ -80,18 +80,16 @@
                     {% for userpub in userpubs %}
                     <div class="">
                         <div class="card" >
-                            <img src="/{{userpub.3}}" width="100" height="200" class="card-img-top img-fluid" alt="{{userpub.1}}">
+                            <a href="/publication/{{userpub.0}}">
+                                <img src="/{{userpub.3}}" width="100" height="200" class="card-img-top img-fluid" alt="{{userpub.1}}">
+                            </a>
+                            
                             <div class="card-body">
                                 <h5 class="card-title">{{userpub.1}}</h5>
                             </div>
                             <div class="card-footer" style="text-align: center;">
                                 <div class="row">
                                     <b> {{userpub.7}} Me gusta</b>
-                                </div>
-                                <div class="row">
-                                    <a class="btn" href="/publication/{{userpub.0}}">
-                                        <i class="far fa-eye"></i> <b>Ver Publicacion</b>
-                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -111,7 +109,9 @@
                 {% for userlike in userlikes %}
                 <div class="">
                     <div class="card" >
-                        <img src="/{{userlike.3}}" width="100" height="200" class="card-img-top img-fluid" alt="{{userlike.1}}">
+                        <a href="/publication/{{userlike.0}}">
+                            <img src="/{{userlike.3}}" width="100" height="200" class="card-img-top img-fluid" alt="{{userlike.1}}">
+                        </a>
                         <div class="card-body">
                             <h5 class="card-title">{{userlike.1}}</h5>
                         </div>
@@ -126,11 +126,6 @@
                                 </a>
                             {% endif %}
                             {%endwith%}
-                            </div>
-                            <div class="row">
-                                <a class="btn" href="/publication/{{userlike.0}}">
-                                    <i class="far fa-eye"></i> <b>Ver Publicacion</b>
-                                </a>
                             </div>
                         </div>
                     </div>
@@ -149,16 +144,13 @@
                 {% for userprivate in userprivates %}
                 <div class="">
                     <div class="card" >
-                        <img src="/{{userprivate.3}}" width="100" height="200" class="card-img-top img-fluid" alt="{{userprivate.1}}">
+                        <a href="/publication/{{userprivate.0}}">
+                            <img src="/{{userprivate.3}}" width="100" height="200" class="card-img-top img-fluid" alt="{{userprivate.1}}">
+                        </a>
                         <div class="card-footer">
-                            <div class="row">
-                                <a class="btn" href="/publication/{{userprivate.0}}">
-                                    <i class="far fa-eye"></i> <b>Ver Publicacion</b>
-                                </a>
-                            </div>
-                            <div class="row">
-                                <a class="btn"onclick="ConfirmChangeStatus('{{userprivate.0}}', 3)" >
-                                    <i class="fas fa-lock-open"></i> <b>Hacer publica</b>
+                            <div class='row'>
+                                <a class='btn'onclick="ConfirmChangeStatus('{{userprivate.0}}', 3)">
+                                    <i class='fas fa-lock-open'></i> <b>Hacer publica</b>
                                 </a>
                             </div>
                         </div>
@@ -255,7 +247,7 @@
         <a class="btn-menufloat btn-lg" href="/SearchResult/0.___" ><i class="fas fa-search"></i></a>
         <a class="btn-menufloat btn-lg" href="/crearPublicacion/0"><i class="fas fa-plus"></i></a>
         {% if is_logged() %}
-        <a href="/UserProfile/{{session.id_user}}" class="btn-menufloat btn-lg" style="color: rgb(255, 255, 255); background-color: black; border-radius: 50%;">
+        <a href="/UserProfile/{{session.id_user}}" class="btn-menufloat btn-lg" style="color: rgb(255, 255, 255); background-color: black; border-bottom: 5px rgb(255, 255, 255) solid;">
             <i class="fas fa-user"></i>
         </a>
         {% else %}
@@ -276,31 +268,31 @@
     var contprivadas=1;
     var contlikes=1;
 
-    $(document).ready(function(){
-        var div = document.querySelector('.menuinferior');
-        if (window.innerWidth<=997){
-            console.log('no los muestro');
+    // $(document).ready(function(){
+    //     var div = document.querySelector('.menuinferior');
+    //     if (window.innerWidth<=997){
+    //         console.log('no los muestro');
             
-            // Apply style to div
-            div.setAttribute('style', 'display: flex');
-        }
-        else{
-            console.log('no los muestro');
-            // Apply style to div
-            div.setAttribute('style', 'display: none');
-        }
-    });
-    window.addEventListener('resize', function(){
-        var div = document.querySelector('.menuinferior');
-        if (window.innerWidth<=997){
-            console.log('no los muestro')
-            div.setAttribute('style', 'display: flex');
-        }
-        else{
-            console.log('no los muestro')
-            div.setAttribute('style', 'display: none');
-        }
-    });
+    //         // Apply style to div
+    //         div.setAttribute('style', 'display: flex');
+    //     }
+    //     else{
+    //         console.log('no los muestro');
+    //         // Apply style to div
+    //         div.setAttribute('style', 'display: none');
+    //     }
+    // });
+    // window.addEventListener('resize', function(){
+    //     var div = document.querySelector('.menuinferior');
+    //     if (window.innerWidth<=997){
+    //         console.log('no los muestro')
+    //         div.setAttribute('style', 'display: flex');
+    //     }
+    //     else{
+    //         console.log('no los muestro')
+    //         div.setAttribute('style', 'display: none');
+    //     }
+    // });
 
     function Visible(option){
         if (option=='Publicaciones'){
@@ -510,18 +502,16 @@
                         data.GroupPubs.forEach(publicpub => {
                             html+="<div class=''>"+
                                     "<div class='card' >"+
-                                        "<img src='/"+publicpub[3]+"' width='100' height='200' class='card-img-top img-fluid' alt='"+publicpub[1]+"'>"+
+                                        "<a href='/publication/"+publicpub[0]+"'>"+
+                                            "<img src='/"+publicpub[3]+"' width='100' height='200' class='card-img-top img-fluid' alt='"+publicpub[1]+"'>"+
+                                        "</a>"+
+    
                                         "<div class='card-body'>"+
                                             "<h5 class='card-title'>"+publicpub[1]+"</h5>"+
                                         "</div>"+
                                         "<div class='card-footer' style='text-align: center;'>"+
                                             "<div class='row'>"+
                                                 "<b> "+publicpub[7]+" Me gusta</b>"+
-                                            "</div>"+
-                                            "<div class='row'>"+
-                                                "<a class='btn' href='/publication/"+publicpub[0]+"'>"+
-                                                    "<i class='far fa-eye'></i> <b>Ver Publicacion</b>"+
-                                                "</a>"+
                                             "</div>"+
                                         "</div>"+
                                     "</div>"+
@@ -535,13 +525,11 @@
                         data.GroupPubs.forEach(privatepub=>{
                             html+="<div class=''>"+
                                     "<div class='card' >"+
-                                        "<img src='/"+privatepub[3]+"' width='100' height='200' class='card-img-top img-fluid' alt='"+privatepub[1]+"'>"+
+                                        "<a href='/publication/"+privatepub[0]+"'>"+
+                                            "<img src='/"+privatepub[3]+"' width='100' height='200' class='card-img-top img-fluid' alt='"+privatepub[1]+"'>"+
+                                        "</a>"+
+                                        
                                         "<div class='card-footer'>"+
-                                            "<div class='row'>"+
-                                                "<a class='btn' href='/publication/"+privatepub[0]+"'>"+
-                                                    "<i class='far fa-eye'></i> <b>Ver Publicacion</b>"+
-                                                "</a>"+
-                                            "</div>"+
                                             "<div class='row'>"+
                                                 "<a class='btn'onclick='ConfirmChangeStatus('"+privatepub[0]+"', 3)' >"+
                                                     "<i class='fas fa-lock-open'></i> <b>Hacer publica</b>"+
@@ -559,7 +547,11 @@
                         data.GroupPubs.forEach(publike=>{
                             html+="<div class=''>"+
                                 "<div class='card' >"+
-                                    "<img src='/"+publike[3]+"' width='100' height='200' class='card-img-top img-fluid' alt='"+publike[1]+"'>"+
+                                    
+                                    "<a class='btn' href='/publication/"+publike[0]+"'>"+
+                                        "<img src='/"+publike[3]+"' width='100' height='200' class='card-img-top img-fluid' alt='"+publike[1]+"'>"+
+                                    "</a>"+
+    
                                     "<div class='card-body'>"+
                                         "<h5 class='card-title'>"+publike[1]+"</h5>"+
                                     "</div>"+
@@ -573,11 +565,6 @@
                                         "</a>";
                             }
                             html+="</div>"+
-                                            "<div class='row'>"+
-                                                "<a class='btn' href='/publication/"+publike[0]+"'>"+
-                                                    "<i class='far fa-eye'></i> <b>Ver Publicacion</b>"+
-                                                "</a>"+
-                                            "</div>"+
                                         "</div>"+
                                     "</div>"+
                                 "</div>";  

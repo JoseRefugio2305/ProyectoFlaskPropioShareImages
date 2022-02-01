@@ -28,13 +28,6 @@
                     <div class="card-body">
                         <h5 class="card-title" style="text-overflow: ellipsis; overflow: hidden;white-space: nowrap;">{{SearchP.1}}</h5>
                     </div>
-                    <div class="card-footer">
-                        <div class="row">
-                            <a class="btn col-md-12" href="/publication/{{SearchP.0}}">
-                                <i class="far fa-eye"></i> <b>Ver Publicacion</b>
-                            </a>
-                        </div>
-                    </div>
                 </div>
             </div>
         
@@ -57,13 +50,6 @@
                     <div class="card-body">
                         <h5 class="card-title" style="text-overflow: ellipsis; overflow: hidden;white-space: nowrap;">{{SearchU.1}} {{SearchU.2}}</h5>
                     </div>
-                    <div class="card-footer">
-                        <div class="row">
-                            <a class="btn col-md-12" href="/UserProfile/{{SearchU.0}}">
-                                <i class="far fa-eye"></i> <b>Ver Usuario</b>
-                            </a>
-                        </div>
-                    </div>
                 </div>
             </div>
         
@@ -77,7 +63,7 @@
 <div class="menuinferior">
     <div class="contenedormenu">
         <a class="btn-menufloat btn-lg" href="/"><i class="fas fa-home"></i></a>
-        <a class="btn-menufloat btn-lg" href="/SearchResult/0.___" style="color: rgb(255, 255, 255); background-color: black; border-radius: 50%;"><i class="fas fa-search"></i></a>
+        <a class="btn-menufloat btn-lg" href="/SearchResult/0.___" style="color: rgb(255, 255, 255); background-color: black; border-bottom: 5px rgb(255, 255, 255) solid;"><i class="fas fa-search"></i></a>
         <a class="btn-menufloat btn-lg" href="/crearPublicacion/0"><i class="fas fa-plus"></i></a>
         {% if is_logged() %}
         <a href="/UserProfile/{{session.id_user}}" class="btn-menufloat btn-lg" >
@@ -93,31 +79,18 @@
 
 <script>
     $(document).ready(function(){
-        var div = document.querySelector('.menuinferior');
         if (window.innerWidth<=997){
-            console.log('no los muestro');
-            
-            // Apply style to div
-            div.setAttribute('style', 'display: flex');
             document.getElementById('divsearchphone').style.display='';
         }
         else{
-            console.log('no los muestro');
-            // Apply style to div
-            div.setAttribute('style', 'display: none');
             document.getElementById('divsearchphone').style.display='none';
         }
     });
     window.addEventListener('resize', function(){
-        var div = document.querySelector('.menuinferior');
         if (window.innerWidth<=997){
-            console.log('no los muestro')
-            div.setAttribute('style', 'display: flex');
             document.getElementById('divsearchphone').style.display='';
         }
         else{
-            console.log('no los muestro')
-            div.setAttribute('style', 'display: none');
             document.getElementById('divsearchphone').style.display='None';
         }
     });
