@@ -1,160 +1,3 @@
-ALTER DATABASE mi_base_de_datos 
-CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
-
--- Volcando estructura para tabla bddpinterestchafon.conversacion
-CREATE TABLE IF NOT EXISTS `conversacion` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `iduserremitente` int(11) NOT NULL,
-  `iduserdestino` int(11) NOT NULL,
-  `fechainicio` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `reluserremitente` (`iduserremitente`),
-  KEY `reluserdestino` (`iduserdestino`),
-  CONSTRAINT `reluserdestino` FOREIGN KEY (`iduserdestino`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `reluserremitente` FOREIGN KEY (`iduserremitente`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
-
--- Volcando datos para la tabla bddpinterestchafon.conversacion: ~0 rows (aproximadamente)
-/*!40000 ALTER TABLE `conversacion` DISABLE KEYS */;
-/*!40000 ALTER TABLE `conversacion` ENABLE KEYS */;
-
--- Volcando estructura para tabla bddpinterestchafon.publicacion
-CREATE TABLE IF NOT EXISTS `publicacion` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `pub_title` varchar(150) NOT NULL DEFAULT 'Sin determinar',
-  `pub_des` varchar(250) NOT NULL DEFAULT 'Sin descripcion',
-  `url_archive` varchar(250) NOT NULL DEFAULT 'static/img/imagenotfound.png',
-  `id_status` int(11) NOT NULL DEFAULT '1',
-  `id_usuario` int(11) NOT NULL,
-  `pub_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `StatusPublicacion` (`id_status`),
-  KEY `RelUsuarioPublica` (`id_usuario`),
-  CONSTRAINT `RelUsuarioPublica` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `StatusPublicacion` FOREIGN KEY (`id_status`) REFERENCES `pubstatus` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
-
--- Volcando datos para la tabla bddpinterestchafon.publicacion: ~0 rows (aproximadamente)
-/*!40000 ALTER TABLE `publicacion` DISABLE KEYS */;
-/*!40000 ALTER TABLE `publicacion` ENABLE KEYS */;
-
--- Volcando estructura para tabla bddpinterestchafon.pubstatus
-CREATE TABLE IF NOT EXISTS `pubstatus` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` varchar(50) NOT NULL,
-  `statusdesc` varchar(50) NOT NULL DEFAULT 'Es un estatus',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
-
--- Volcando datos para la tabla bddpinterestchafon.pubstatus: ~2 rows (aproximadamente)
-/*!40000 ALTER TABLE `pubstatus` DISABLE KEYS */;
-INSERT INTO `pubstatus` (`id`, `type`, `statusdesc`) VALUES
-	(1, 'Aprobada', 'Es un estatus'),
-	(2, 'Eliminada', 'Usado cuando la publicacion es eliminada'),
-	(3, 'Privada', 'Cuando la publicacion solo la vera el usuario'),
-	(4, 'Eliminada por administrador', 'Es cuando el administrador la elimina');
-/*!40000 ALTER TABLE `pubstatus` ENABLE KEYS */;
-
--- Volcando estructura para tabla bddpinterestchafon.reactions
-CREATE TABLE IF NOT EXISTS `reactions` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` varchar(50) NOT NULL,
-  `reactiondesc` varchar(150) NOT NULL DEFAULT 'Es una reaccion',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
-
--- Volcando datos para la tabla bddpinterestchafon.reactions: ~2 rows (aproximadamente)
-/*!40000 ALTER TABLE `reactions` DISABLE KEYS */;
-INSERT INTO `reactions` (`id`, `type`, `reactiondesc`) VALUES
-	(1, 'Like', 'Es una reaccion'),
-	(2, 'Dislike', 'Es una reaccion');
-/*!40000 ALTER TABLE `reactions` ENABLE KEYS */;
-
--- Volcando estructura para tabla bddpinterestchafon.relmensajes
-CREATE TABLE IF NOT EXISTS `relmensajes` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `contenido` varchar(250) NOT NULL DEFAULT '',
-  `idconversacion` int(11) NOT NULL,
-  `idremitente` int(11) NOT NULL,
-  `fechaenvio` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `relmensajeconversacion` (`idconversacion`),
-  KEY `relidremitente` (`idremitente`),
-  CONSTRAINT `relidremitente` FOREIGN KEY (`idremitente`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `relmensajeconversacion` FOREIGN KEY (`idconversacion`) REFERENCES `conversacion` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
-
--- Volcando datos para la tabla bddpinterestchafon.relmensajes: ~0 rows (aproximadamente)
-/*!40000 ALTER TABLE `relmensajes` DISABLE KEYS */;
-/*!40000 ALTER TABLE `relmensajes` ENABLE KEYS */;
-
--- Volcando estructura para tabla bddpinterestchafon.relusercomment
-CREATE TABLE IF NOT EXISTS `relusercomment` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `comment` varchar(250) NOT NULL,
-  `idpub` int(11) NOT NULL,
-  `iduser` int(11) NOT NULL,
-  `isactive` varchar(2) NOT NULL DEFAULT '1',
-  `comment_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `publicacion` (`idpub`),
-  KEY `usuario` (`iduser`),
-  CONSTRAINT `publicacion` FOREIGN KEY (`idpub`) REFERENCES `publicacion` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `usuario` FOREIGN KEY (`iduser`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
-
--- Volcando datos para la tabla bddpinterestchafon.relusercomment: ~0 rows (aproximadamente)
-/*!40000 ALTER TABLE `relusercomment` DISABLE KEYS */;
-/*!40000 ALTER TABLE `relusercomment` ENABLE KEYS */;
-
--- Volcando estructura para tabla bddpinterestchafon.reluserfollowuser
-CREATE TABLE IF NOT EXISTS `reluserfollowuser` (
-  `iduserseguido` int(11) NOT NULL,
-  `iduserquesigue` int(11) NOT NULL,
-  `isactive` varchar(2) NOT NULL DEFAULT '1',
-  `datefollow` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  KEY `FK_usurarioseguido` (`iduserseguido`),
-  KEY `FK_usuarioquesigue` (`iduserquesigue`),
-  CONSTRAINT `FK_usuarioquesigue` FOREIGN KEY (`iduserquesigue`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_usurarioseguido` FOREIGN KEY (`iduserseguido`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
-
--- Volcando datos para la tabla bddpinterestchafon.reluserfollowuser: ~0 rows (aproximadamente)
-/*!40000 ALTER TABLE `reluserfollowuser` DISABLE KEYS */;
-/*!40000 ALTER TABLE `reluserfollowuser` ENABLE KEYS */;
-
--- Volcando estructura para tabla bddpinterestchafon.reluserreaction
-CREATE TABLE IF NOT EXISTS `reluserreaction` (
-  `idUser` int(11) NOT NULL,
-  `idReaction` int(11) NOT NULL,
-  `idPub` int(11) NOT NULL,
-  KEY `usario` (`idUser`),
-  KEY `reaccion` (`idReaction`),
-  KEY `publicacionreaccionada` (`idPub`),
-  CONSTRAINT `publicacionreaccionada` FOREIGN KEY (`idPub`) REFERENCES `publicacion` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `reaccion` FOREIGN KEY (`idReaction`) REFERENCES `reactions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `usario` FOREIGN KEY (`idUser`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
-
--- Volcando datos para la tabla bddpinterestchafon.reluserreaction: ~0 rows (aproximadamente)
-/*!40000 ALTER TABLE `reluserreaction` DISABLE KEYS */;
-/*!40000 ALTER TABLE `reluserreaction` ENABLE KEYS */;
-
--- Volcando estructura para tabla bddpinterestchafon.userplaybuscaminas
-CREATE TABLE IF NOT EXISTS `userplaybuscaminas` (
-  `idplayer` int(11) NOT NULL,
-  `dificultad` varchar(30) NOT NULL DEFAULT '',
-  `hardporcent` int(11) NOT NULL DEFAULT '0',
-  `tiempo` int(11) NOT NULL DEFAULT '0',
-  `fechascore` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  KEY `llaveplayer` (`idplayer`),
-  CONSTRAINT `llaveplayer` FOREIGN KEY (`idplayer`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
-
--- Volcando datos para la tabla bddpinterestchafon.userplaybuscaminas: ~0 rows (aproximadamente)
-/*!40000 ALTER TABLE `userplaybuscaminas` DISABLE KEYS */;
-/*!40000 ALTER TABLE `userplaybuscaminas` ENABLE KEYS */;
-
 -- Volcando estructura para tabla bddpinterestchafon.userroles
 CREATE TABLE IF NOT EXISTS `userroles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -162,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `userroles` (
   `isActive` varchar(2) NOT NULL DEFAULT '1',
   `description` varchar(50) NOT NULL DEFAULT 'Es un tipo de rol',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 -- Volcando datos para la tabla bddpinterestchafon.userroles: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `userroles` DISABLE KEYS */;
@@ -187,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   UNIQUE KEY `email` (`email`),
   KEY `UserRol` (`id_rol`),
   CONSTRAINT `UserRol` FOREIGN KEY (`id_rol`) REFERENCES `userroles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Volcando datos para la tabla bddpinterestchafon.usuario: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
@@ -209,13 +52,170 @@ CREATE TABLE IF NOT EXISTS `usuarioadmin` (
   UNIQUE KEY `email` (`email`),
   KEY `rol` (`id_rol`),
   CONSTRAINT `rol` FOREIGN KEY (`id_rol`) REFERENCES `userroles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 -- Volcando datos para la tabla bddpinterestchafon.usuarioadmin: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `usuarioadmin` DISABLE KEYS */;
 INSERT INTO `usuarioadmin` (`id`, `firstname`, `lastname`, `email`, `password`, `url_img`, `is_active`, `id_rol`, `gender`, `fechanac`) VALUES
 	(1, 'El admin', 'Admin', 'admin@mail.com', '123456', 'static/img/usernotfound.png', '1', 2, 'H', '2022-01-17');
 /*!40000 ALTER TABLE `usuarioadmin` ENABLE KEYS */;
+
+-- Volcando estructura para tabla bddpinterestchafon.pubstatus
+CREATE TABLE IF NOT EXISTS `pubstatus` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(50) NOT NULL,
+  `statusdesc` varchar(50) NOT NULL DEFAULT 'Es un estatus',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+-- Volcando datos para la tabla bddpinterestchafon.pubstatus: ~2 rows (aproximadamente)
+/*!40000 ALTER TABLE `pubstatus` DISABLE KEYS */;
+INSERT INTO `pubstatus` (`id`, `type`, `statusdesc`) VALUES
+	(1, 'Aprobada', 'Es un estatus'),
+	(2, 'Eliminada', 'Usado cuando la publicacion es eliminada'),
+	(3, 'Privada', 'Cuando la publicacion solo la vera el usuario'),
+	(4, 'Eliminada por administrador', 'Es cuando el administrador la elimina');
+/*!40000 ALTER TABLE `pubstatus` ENABLE KEYS */;
+
+-- Volcando estructura para tabla bddpinterestchafon.conversacion
+CREATE TABLE IF NOT EXISTS `conversacion` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `iduserremitente` int(11) NOT NULL,
+  `iduserdestino` int(11) NOT NULL,
+  `fechainicio` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `reluserremitente` (`iduserremitente`),
+  KEY `reluserdestino` (`iduserdestino`),
+  CONSTRAINT `reluserdestino` FOREIGN KEY (`iduserdestino`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `reluserremitente` FOREIGN KEY (`iduserremitente`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Volcando datos para la tabla bddpinterestchafon.conversacion: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `conversacion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `conversacion` ENABLE KEYS */;
+
+-- Volcando estructura para tabla bddpinterestchafon.publicacion
+CREATE TABLE IF NOT EXISTS `publicacion` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pub_title` varchar(150) NOT NULL DEFAULT 'Sin determinar',
+  `pub_des` varchar(250) NOT NULL DEFAULT 'Sin descripcion',
+  `url_archive` varchar(250) NOT NULL DEFAULT 'static/img/imagenotfound.png',
+  `id_status` int(11) NOT NULL DEFAULT '1',
+  `id_usuario` int(11) NOT NULL,
+  `pub_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `StatusPublicacion` (`id_status`),
+  KEY `RelUsuarioPublica` (`id_usuario`),
+  CONSTRAINT `RelUsuarioPublica` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `StatusPublicacion` FOREIGN KEY (`id_status`) REFERENCES `pubstatus` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Volcando datos para la tabla bddpinterestchafon.publicacion: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `publicacion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `publicacion` ENABLE KEYS */;
+
+
+
+-- Volcando estructura para tabla bddpinterestchafon.reactions
+CREATE TABLE IF NOT EXISTS `reactions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(50) NOT NULL,
+  `reactiondesc` varchar(150) NOT NULL DEFAULT 'Es una reaccion',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+-- Volcando datos para la tabla bddpinterestchafon.reactions: ~2 rows (aproximadamente)
+/*!40000 ALTER TABLE `reactions` DISABLE KEYS */;
+INSERT INTO `reactions` (`id`, `type`, `reactiondesc`) VALUES
+	(1, 'Like', 'Es una reaccion'),
+	(2, 'Dislike', 'Es una reaccion');
+/*!40000 ALTER TABLE `reactions` ENABLE KEYS */;
+
+-- Volcando estructura para tabla bddpinterestchafon.relmensajes
+CREATE TABLE IF NOT EXISTS `relmensajes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `contenido` varchar(250) NOT NULL DEFAULT '',
+  `idconversacion` int(11) NOT NULL,
+  `idremitente` int(11) NOT NULL,
+  `fechaenvio` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `relmensajeconversacion` (`idconversacion`),
+  KEY `relidremitente` (`idremitente`),
+  CONSTRAINT `relidremitente` FOREIGN KEY (`idremitente`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `relmensajeconversacion` FOREIGN KEY (`idconversacion`) REFERENCES `conversacion` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Volcando datos para la tabla bddpinterestchafon.relmensajes: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `relmensajes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `relmensajes` ENABLE KEYS */;
+
+-- Volcando estructura para tabla bddpinterestchafon.relusercomment
+CREATE TABLE IF NOT EXISTS `relusercomment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `comment` varchar(250) NOT NULL,
+  `idpub` int(11) NOT NULL,
+  `iduser` int(11) NOT NULL,
+  `isactive` varchar(2) NOT NULL DEFAULT '1',
+  `comment_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `publicacion` (`idpub`),
+  KEY `usuario` (`iduser`),
+  CONSTRAINT `publicacion` FOREIGN KEY (`idpub`) REFERENCES `publicacion` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `usuario` FOREIGN KEY (`iduser`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Volcando datos para la tabla bddpinterestchafon.relusercomment: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `relusercomment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `relusercomment` ENABLE KEYS */;
+
+-- Volcando estructura para tabla bddpinterestchafon.reluserfollowuser
+CREATE TABLE IF NOT EXISTS `reluserfollowuser` (
+  `iduserseguido` int(11) NOT NULL,
+  `iduserquesigue` int(11) NOT NULL,
+  `isactive` varchar(2) NOT NULL DEFAULT '1',
+  `datefollow` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY `FK_usurarioseguido` (`iduserseguido`),
+  KEY `FK_usuarioquesigue` (`iduserquesigue`),
+  CONSTRAINT `FK_usuarioquesigue` FOREIGN KEY (`iduserquesigue`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_usurarioseguido` FOREIGN KEY (`iduserseguido`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Volcando datos para la tabla bddpinterestchafon.reluserfollowuser: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `reluserfollowuser` DISABLE KEYS */;
+/*!40000 ALTER TABLE `reluserfollowuser` ENABLE KEYS */;
+
+-- Volcando estructura para tabla bddpinterestchafon.reluserreaction
+CREATE TABLE IF NOT EXISTS `reluserreaction` (
+  `idUser` int(11) NOT NULL,
+  `idReaction` int(11) NOT NULL,
+  `idPub` int(11) NOT NULL,
+  KEY `usario` (`idUser`),
+  KEY `reaccion` (`idReaction`),
+  KEY `publicacionreaccionada` (`idPub`),
+  CONSTRAINT `publicacionreaccionada` FOREIGN KEY (`idPub`) REFERENCES `publicacion` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `reaccion` FOREIGN KEY (`idReaction`) REFERENCES `reactions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `usario` FOREIGN KEY (`idUser`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Volcando datos para la tabla bddpinterestchafon.reluserreaction: ~1 rows (aproximadamente)
+/*!40000 ALTER TABLE `reluserreaction` DISABLE KEYS */;
+/*!40000 ALTER TABLE `reluserreaction` ENABLE KEYS */;
+
+-- Volcando estructura para tabla bddpinterestchafon.userplaybuscaminas
+CREATE TABLE IF NOT EXISTS `userplaybuscaminas` (
+  `idplayer` int(11) NOT NULL,
+  `dificultad` varchar(30) NOT NULL DEFAULT '',
+  `hardporcent` int(11) NOT NULL DEFAULT '0',
+  `tiempo` int(11) NOT NULL DEFAULT '0',
+  `fechascore` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY `llaveplayer` (`idplayer`),
+  CONSTRAINT `llaveplayer` FOREIGN KEY (`idplayer`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Volcando datos para la tabla bddpinterestchafon.userplaybuscaminas: ~0 rows (aproximadamente)
+/*!40000 ALTER TABLE `userplaybuscaminas` DISABLE KEYS */;
+/*!40000 ALTER TABLE `userplaybuscaminas` ENABLE KEYS */;
+
 
 -- Volcando estructura para procedimiento bddpinterestchafon.Busqueda
 DELIMITER $$

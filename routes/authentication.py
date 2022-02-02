@@ -49,7 +49,7 @@ def addUser():
             session['password'] = password
             session['name'] = firstname
             session['imgprofile'] = 'static/img/usernotfound.png'
-
+            session["user_rol"]= 1
             mensaje = 'El usuario fue registrado exitosamente'
             messagetype='success'
 
