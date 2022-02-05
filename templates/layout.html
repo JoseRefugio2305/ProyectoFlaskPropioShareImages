@@ -205,15 +205,39 @@
             var html='';
             if(busqueda.length>=3)
             {
-                $.getJSON('/SearchSuggestions/'+1+'.'+busqueda, function(data){
-                    if(data.suger.length>0)
+                // $.getJSON('/SearchSuggestions/'+1+'.'+busqueda, function(data){
+                //     if(data.suger.length>0)
+                //     {
+                //         data.suger.forEach(element => {
+                //             html+="<option value='"+element[0]+"'>"
+                //         });
+                //     }
+                //     document.getElementById('listasugerencias').innerHTML=html
+                // });
+                fetch('/SearchSuggestions', {
+                    method: "POST",
+                    headers: {
+                        //si la respuesta del servidor no es un json saltará una excepción en js
+                        "Accept": "application/json",
+                        //le indica al servidor que se le enviará un json
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        optionsearch:1,
+                        search:busqueda
+                    })
+                })
+                .then(response => response.json())
+                .then(function (result){
+                    if(result.suger.length>0)
                     {
-                        data.suger.forEach(element => {
+                        result.suger.forEach(element => {
                             html+="<option value='"+element[0]+"'>"
                         });
                     }
                     document.getElementById('listasugerencias').innerHTML=html
-                });
+                })
             }
         });
 

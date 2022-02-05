@@ -1,8 +1,30 @@
-let filas=15;
+    let filas=15;
     let columnas=20;
     let lado=30;
+    let vidas=3;
+    let  marcas=0;
+    let timevalue=0;
 
-    let  marcas=0
+    var soundLoseLive = new Howl({
+      src: ['/static/music/error.mp3'],
+      volume: 10.0
+    });
+    var soundLoseGame2 = new Howl({
+      src: ['/static/music/lose2.mp3'],
+      volume: 10.0
+    });
+    var soundLoseGame3 = new Howl({
+      src: ['/static/music/lose3.mp3'],
+      volume: 10.0
+    });
+    var soundLoseGame = new Howl({
+      src: ['/static/music/loser.mp3'],
+      volume: 10.0
+    });
+    var soundWin = new Howl({
+      src: ['/static/music/victoria.mp3'],
+      volume: 10.0
+    });
 
     let contadortiempo=1
 
@@ -15,8 +37,15 @@ let filas=15;
 
     nuevoJuego()
     function nuevoJuego(){
-        document.getElementById("tiempo").innerHTML=0
-        reiniciarVariables() 
+        document.getElementById("tiempo").innerHTML="<i class='fas fa-stopwatch'></i> 000"
+        document.getElementById('vidas').innerHTML="<i class='fas fa-heart'></i> 3"
+        soundLoseGame.stop()
+        soundLoseGame2.stop()
+        soundLoseGame3.stop()
+        soundWin.stop()
+        clearInterval(timevalue)
+        soundLoseLive.stop()
+        reiniciarVariables()
         generarTableroHTML()
         anadirEventos()
         generarTableroJuego()
@@ -83,18 +112,19 @@ let filas=15;
         valdif.innerHTML=valdif.value()
     }
 
-    
+
 
     function reiniciarVariables() {
         marcas=0
         enJuego=true//para saber si el juego ha terminado
         juegoIniciado=false//saber cuando el usuario ha dado clic sobre el tablero lo que quiere decri que inicio el juego
         contadortiempo=1
+        vidas=3
         actualizarPanelMinas()
     }
 
     function generarTableroHTML(){
-        
+
 
         let html="";
         for(let f=0;f<filas;f++){
@@ -103,7 +133,7 @@ let filas=15;
                 /*
                     Generacion de cada uno de los elementos de la matriz
                     y se les asignara una coordenada, para poder tratar estos elementos
-                    de forma matematica, siguiendo patrones que facilitara la estructura de 
+                    de forma matematica, siguiendo patrones que facilitara la estructura de
                     algoritmos
                     id="celda-${c}-${f}"
                     es la instruccion mas importante, esta asignara una corrdenada a cada id de las celdas
@@ -146,14 +176,14 @@ let filas=15;
         abrirArea(c,f)
         refrescarTablero()
     }
-    /*Se encargara de comportamiento de clic derecho e izquierdo para descubrir las celdas o 
+    /*Se encargara de comportamiento de clic derecho e izquierdo para descubrir las celdas o
     marcarlas para protegerlas de ser descubiertas*/
     function clicSimple(celda,c,f,me){
         if (!enJuego) {
             return//si no esamos en juego retornamos y no se realiza nada
         }
         if(tablero[c][f].estado=="descubierto"){
-            return//si la casilla esta descubierta ya no se hace ninguna accion sobre ella 
+            return//si la casilla esta descubierta ya no se hace ninguna accion sobre ella
         }
         switch (me.button) {
             case 0://codigo para clic izquierdo
@@ -161,19 +191,16 @@ let filas=15;
                     break//porque no se pueden abrir celdas marcadas
                 }
                 if(!juegoIniciado){
-                    
-                    const timevalue=window.setInterval(function(){
-                        
+
+                    timevalue=window.setInterval(function(){
+
                         let timecount=document.getElementById("tiempo")
-                        timecount.innerHTML=contadortiempo
+                        timecount.innerHTML="<i class='fas fa-stopwatch'></i> "+contadortiempo
                         contadortiempo++
-                        if(!enJuego){
-                            clearInterval(timevalue)
-                        }
                     },1000);
                 }
                 /*
-                    Hay que proteger para evitar que el primer clic resulte ser una mina y termine el juego 
+                    Hay que proteger para evitar que el primer clic resulte ser una mina y termine el juego
                     inmediatamente
                 */
                 while(!juegoIniciado&&tablero[c][f].valor==-1){
@@ -181,11 +208,31 @@ let filas=15;
                     //y cambiar esa bomba que se encontro en el primer clic
                     generarTableroJuego()
                 }
-                tablero[c][f].estado="descubierto"
+                if(tablero[c][f].valor==-1 && vidas>0)
+                {
+
+                    soundLoseLive.play()
+                    vidas=vidas-1
+                    let vidasPanel=document.getElementById("vidas")
+                    vidasPanel.innerHTML="<i class='fas fa-heart'></i> "+vidas
+                    if(filas==100&&columnas==100)
+                    {
+                        Swal.fire(
+                        ':(',
+                        'Perdiste una vida te quedan '+vidas+' vidas',
+                        'error'
+                        )
+                    }
+                }
+                else
+                {
+                    tablero[c][f].estado="descubierto"
+                }
+
                 juegoIniciado=true//aqui se avisa que el jugador ya descubrio al menos una celda por lo que el juego inicio
-                
+
                 if(tablero[c][f].valor==0){
-                    //si encontramos una celda sin minas alrededor, lo que se hac es despejar el area hasta encontrar celdas 
+                    //si encontramos una celda sin minas alrededor, lo que se hac es despejar el area hasta encontrar celdas
                     //con minas alrededor
                     abrirArea(c,f)
                 }
@@ -226,7 +273,7 @@ let filas=15;
                         }
                     }
                 } catch (error) {
-                    
+
                 }
             }
         }
@@ -269,7 +316,7 @@ let filas=15;
 
     function actualizarPanelMinas() {
         let Panel=document.getElementById("minas")
-        Panel.innerHTML=minas-marcas
+        Panel.innerHTML="<i class='fas fa-flag'></i> "+(minas-marcas)
     }
 
     function verificarGanador() {
@@ -283,16 +330,18 @@ let filas=15;
                     else{
                         return//si encuentra una celda buerta que no es una mina aun no se ha ganado
                     }
-                } 
+                }
             }
         }
+        soundWin.play()
         //si al finalizar la comprobacion, todas las celdas cubiertas son minas, entonces se ha ganado
         let tableroHTML=document.getElementById("tablero")
         tableroHTML.style.background="green"
         enJuego=false
+        clearInterval(timevalue)
         data=[contadortiempo,Math.floor((minas/(columnas * filas ))*100),filas,columnas]
         $.getJSON('/puntajeGanador/'+data, function(data){
-                
+
                 Swal.fire(
                 data.titlemessage,
                 data.message,
@@ -301,7 +350,7 @@ let filas=15;
             });
     }
     function verificarPerdedor() {
-        
+
         for(let f=0;f<filas;f++){
             for(let c=0;c<columnas;c++){
                 //si hay una mina descubierta quiere decir que el jugador perdio
@@ -309,8 +358,36 @@ let filas=15;
                     if(tablero[c][f].estado=="descubierto"){
                     let tableroHTML=document.getElementById("tablero")
                     tableroHTML.style.background="red"
-                    
-                    enJuego=false}
+                    let vidasPanel=document.getElementById("vidas")
+                    vidasPanel.innerHTML="<i class='fas fa-heart-broken'></i> "+vidas
+
+                    enJuego=false
+                    var x=Math.floor(Math.random()*3);
+                    if(x==1)
+                    {
+                        soundLoseGame.play()
+                    }
+                    else if(x==0){
+                        soundLoseGame2.play()
+                    }
+                    else{
+                        soundLoseGame3.play()
+                    }
+                    Swal.fire({
+                        title: 'Custom width, padding, color, background.',
+                        width: 600,
+                        padding: '3em',
+                        color: '#716add',
+                        background: '#fff url(/images/trees.png)',
+                        backdrop: `
+                            rgba(0,0,123,0.4)
+                            url("/images/nyan-cat.gif")
+                            left top
+                            no-repeat
+                            `
+                        })
+
+                    }
                 }
             }
         }
@@ -326,6 +403,7 @@ let filas=15;
                 }
             }
         }
+        clearInterval(timevalue)
         Swal.fire(
                 'Lo sentimos',
                 'Perdiste',
@@ -333,7 +411,7 @@ let filas=15;
         )
     }
 
-    /*generar tablero de juego no de html, este servira para dar seguiemeinto logico de los elementos 
+    /*generar tablero de juego no de html, este servira para dar seguiemeinto logico de los elementos
     que el jugador no puede ver*/
     function generarTableroJuego(){
         vaciarTablero()//vaciar tablero para evitar interferencias de partidas pasadas
@@ -368,7 +446,7 @@ let filas=15;
                     for (let i = -1; i <= 1; i++) {
                         for (let j = -1; j <= 1; j++) {
                             if(i==0&&j==0){
-                                continue//esto es cuando ambas tienen este valor la celda se cuenta 
+                                continue//esto es cuando ambas tienen este valor la celda se cuenta
                                 //a si misma y eso no  tiene sentido asi que pasamos
                             }
                             try {//evitamos errores con las posiciones negativas
@@ -376,7 +454,7 @@ let filas=15;
                                     contador++
                                 }
                             } catch(e) {
-                                
+
                             }
                         }
                     }

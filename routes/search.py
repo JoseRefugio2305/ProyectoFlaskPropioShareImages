@@ -1,16 +1,19 @@
 from utils.bdd import mysql
-from flask import Blueprint, jsonify, render_template
+from flask import Blueprint, jsonify, render_template, request
 
 search=Blueprint('search',__name__)
 #Ruta json que funcionara para dar sugerencias y realizar la busqueda
-@search.route('/SearchSuggestions/<string:opttext>')
-def SearchSuggestions(opttext):
-    opts=int(opttext.split('.')[0])
-    textsearch=opttext.split('.')[1]
-    cur=mysql.connection.cursor()
-    if(opts==1):
-        cur.execute("CALL `Busqueda`({0}, '{1}')".format(opts,textsearch))
-        data=cur.fetchall()
+@search.route('/SearchSuggestions', methods=["POST"])
+def SearchSuggestions():
+    data=['']
+    if(request.method=='POST'):
+        respuesta=request.get_json()
+        opts=int(respuesta['optionsearch'])
+        textsearch=str(respuesta['search'])
+        cur=mysql.connection.cursor()
+        if(opts==1):
+            cur.execute("CALL `Busqueda`({0}, '{1}')".format(opts,textsearch))
+            data=cur.fetchall()
     return jsonify(suger=data)
 
 @search.route('/SearchResult/<string:opttextSearch>')
